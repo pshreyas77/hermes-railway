@@ -1,0 +1,15 @@
+# Railway configuration
+# https://docs.railway.com/reference/railway.toml
+
+[build]
+builder = "docker"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[services.hermes-gateway]
+port = 8000

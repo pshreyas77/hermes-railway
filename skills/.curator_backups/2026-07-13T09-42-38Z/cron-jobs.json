@@ -1,0 +1,307 @@
+{
+  "jobs": [
+    {
+      "id": "9e0ae3e8c9b3",
+      "name": "Obsidian Vault Auto-Commit (10 PM IST)",
+      "prompt": "Scheduled vault auto-commit job at 22:00 (10 PM IST) daily. Runs the script `vault-auto-commit.py` (just filename in this Hermes scripts directory) which calls the vault's `auto-commit.py` to: `git status` \u2192 `git add -A` \u2192 `git commit -m \"vault sync YYYY-MM-DD HH:MM\"` \u2192 `git pull --rebase --autostash` \u2192 `git push origin windows`. Vault owned at `https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git`. Exit 0 = success or no changes, exit 1 = error (auth, conflicts, etc.). Surface errors verbatim when they occur.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "vault-auto-commit.py",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 22 * * *",
+        "display": "0 22 * * *"
+      },
+      "schedule_display": "0 22 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-10T21:19:05.404529+05:30",
+      "next_run_at": "2026-07-13T22:00:00+05:30",
+      "last_run_at": "2026-07-12T22:00:30.371433+05:30",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "b60bd1a2ba42",
+      "name": "Night Shift \u2014 Scout Run (23:00 IST)",
+      "prompt": "Execute the Night Shift Scout Run exactly as specified in the playbook at `E:\\_Knowledge\\ObsidianVault\\playbooks\\01-scout-run.md`. \n\nYour mission: Intake raw captures, classify them, and prepare for refinement. You are the gatekeeper.\n\nCRITICAL: Read these files first before taking any action:\n1. `E:\\_Knowledge\\ObsidianVault\\house-rules.md` \u2014 the Prime Directive (NO SOURCE, NO NOTE)\n2. `E:\\_Knowledge\\ObsidianVault\\playbooks\\01-scout-run.md` \u2014 the full Scout protocol\n3. `E:\\_Knowledge\\ObsidianVault\\07 - SYSTEM\\index.md` \u2014 current vault structure\n\nThen execute the 5-step Scout Pipeline:\n1. INTAKE SCAN: Check `00 INBOX/` and `0-raw/` for new material since last run\n2. CLASSIFICATION: For each item, determine type (article/book/paper/video/idea), extract metadata (title, author, date, source URL), create literature note in `1-desk/<subtype>/` with proper frontmatter\n3. PRIME DIRECTIVE GATE: Verify every item has a verifiable source. Items without sources go to `1-desk/_quarantine/` with `status: quarantined`. No interpretation \u2014 summaries are extractive only.\n4. SAVE: Use naming convention `YYYY-MM-DD \u2014 [Title].md`. Preserve source URLs verbatim.\n5. LOG & REPORT: Append to `night-shift-log.md` with format: `## [YYYY-MM-DD 23:XX] Scout Run | Processed N items`. Do NOT create a morning brief \u2014 that is handled separately.\n\nIf nothing new is found, log: \"Scout: 0 new items (vault intake clean)\" and stop.\n\nVault path: E:\\_Knowledge\\ObsidianVault",
+      "skills": [
+        "obsidian"
+      ],
+      "skill": "obsidian",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "nvidia",
+      "model_snapshot": "deepseek-ai/deepseek-v4-pro",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 23 * * *",
+        "display": "30 23 * * *"
+      },
+      "schedule_display": "30 23 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 2
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-11T16:05:06.377710+05:30",
+      "next_run_at": "2026-07-13T23:30:00+05:30",
+      "last_run_at": "2026-07-12T23:30:33.062073+05:30",
+      "last_status": "error",
+      "last_error": "RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (model 'deepseek-ai/deepseek-v4-pro' -> 'nvidia/nemotron-3-ultra-550b-a55b'), and this job is unpinned. No inference call was made. To run on the new config, pin it explicitly: `cronjob action=update job_id=b60bd1a2ba42 provider=<provider> model=<model>` (or pin the original values to keep them). See #44585.",
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": [
+        "file",
+        "terminal"
+      ],
+      "workdir": "E:\\_Knowledge\\ObsidianVault",
+      "fire_claim": null
+    },
+    {
+      "id": "e5fa48dbb046",
+      "name": "Night Shift \u2014 Refinery Run (03:00 IST)",
+      "prompt": "Execute the Night Shift Refinery Run exactly as specified in the playbook at `E:\\_Knowledge\\ObsidianVault\\playbooks\\02-refinery-run.md`.\n\nYour mission: Extract atomic notes from literature notes in `1-desk/`. One idea \u2192 one file. No interpretation, no drift.\n\nCRITICAL: Read these files first before taking any action:\n1. `E:\\_Knowledge\\ObsidianVault\\house-rules.md` \u2014 the Prime Directive\n2. `E:\\_Knowledge\\ObsidianVault\\playbooks\\02-refinery-run.md` \u2014 the full Refinery protocol\n3. `E:\\_Knowledge\\ObsidianVault\\07 - SYSTEM\\ai-first-rules.md` \u2014 frontmatter standards\n\nThen execute the 5-step Refinery Pipeline:\n1. SOURCE VERIFICATION: For each literature note in `1-desk/` with `status: to-process`, verify the source exists. Skip quarantined or already-processed items.\n2. ATOMIC EXTRACTION: Extract one idea per file. Own words only. Source citation mandatory. No additions. Every atom gets frontmatter with `date`, `type: permanent`, `tags`, `ai-first: true`, `source`.\n3. NAMING: Atomic titles like `Concept Name.md` (no date prefix). Save to `2-atoms/`.\n4. SOURCE ARCHIVAL: Move processed literature notes to `sources/archived/`. Update frontmatter to `status: processed`.\n5. LOG: Append to `night-shift-log.md` with format: `## [YYYY-MM-DD 03:XX] Refinery Run | Extracted N atoms`.\n\nIf no literature notes with `status: to-process` exist, log: \"Refinery: 0 items to process\" and stop.\n\nFor friction detection: If a new claim contradicts an existing vault note, create a `[FRICTION]` block in `3-threads/_friction/` following the template in the playbook.\n\nVault path: E:\\_Knowledge\\ObsidianVault",
+      "skills": [
+        "obsidian"
+      ],
+      "skill": "obsidian",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "nvidia",
+      "model_snapshot": "deepseek-ai/deepseek-v4-pro",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 3 * * *",
+        "display": "0 3 * * *"
+      },
+      "schedule_display": "0 3 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 2
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-11T16:05:33.950389+05:30",
+      "next_run_at": "2026-07-14T03:00:00+05:30",
+      "last_run_at": "2026-07-13T14:10:56.341373+05:30",
+      "last_status": "error",
+      "last_error": "RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (model 'deepseek-ai/deepseek-v4-pro' -> 'minimaxai/minimax-m2.7'), and this job is unpinned. No inference call was made. To run on the new config, pin it explicitly: `cronjob action=update job_id=e5fa48dbb046 provider=<provider> model=<model>` (or pin the original values to keep them). See #44585.",
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": [
+        "file",
+        "terminal"
+      ],
+      "workdir": "E:\\_Knowledge\\ObsidianVault",
+      "fire_claim": null
+    },
+    {
+      "id": "8e3ee9ca65d5",
+      "name": "Night Shift \u2014 Editor Run (06:00 IST)",
+      "prompt": "Execute the Night Shift Editor Run exactly as specified in the playbook at `E:\\_Knowledge\\ObsidianVault\\playbooks\\03-editor-run.md`.\n\nYour mission: Link atomic notes into a knowledge graph, detect contradictions, and update the vault index. You are the cartographer.\n\nCRITICAL: Read these files first before taking any action:\n1. `E:\\_Knowledge\\ObsidianVault\\house-rules.md` \u2014 Prime Directive & friction system\n2. `E:\\_Knowledge\\ObsidianVault\\playbooks\\03-editor-run.md` \u2014 the full Editor protocol\n3. `E:\\_Knowledge\\ObsidianVault\\07 - SYSTEM\\index.md` \u2014 current vault structure\n\nThen execute the 5-step Editor Pipeline:\n1. LINK NEW ATOMS: For each new atom from last Refinery Run, add 2+ outgoing wikilinks and ensure 1+ incoming backlink from existing notes. Search vault for related concepts, people, projects.\n2. FRICTION DETECTION: Scan for contradictions between new atoms and existing vault knowledge. Create `[FRICTION]` blocks in `3-threads/_friction/`. NEVER resolve them \u2014 only flag for morning review.\n3. UPDATE INDEX: Add new atoms to `07 - SYSTEM/index.md` under appropriate sections.\n4. LOG: Append to `night-shift-log.md` with format: `## [YYYY-MM-DD 06:XX] Editor Run | Linked N atoms, flagged F conflicts`.\n5. ORPHAN CHECK: Scan for notes with 0 incoming links (7+ days old). Report in `3-threads/orphans/`.\n\nIf no new atoms exist, log: \"Editor: 0 new atoms to link\" and stop.\n\nThen create/append the morning brief at `BRIEFINGS/YYYY-MM-DD \u2014 Morning Brief.md` with all three run summaries (Scout, Refinery, Editor).\n\nVault path: E:\\_Knowledge\\ObsidianVault",
+      "skills": [
+        "obsidian"
+      ],
+      "skill": "obsidian",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "nvidia",
+      "model_snapshot": "deepseek-ai/deepseek-v4-pro",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 6 * * *",
+        "display": "0 6 * * *"
+      },
+      "schedule_display": "0 6 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 2
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-11T16:06:05.094158+05:30",
+      "next_run_at": "2026-07-14T06:00:00+05:30",
+      "last_run_at": "2026-07-13T14:10:56.570624+05:30",
+      "last_status": "error",
+      "last_error": "RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (model 'deepseek-ai/deepseek-v4-pro' -> 'minimaxai/minimax-m2.7'), and this job is unpinned. No inference call was made. To run on the new config, pin it explicitly: `cronjob action=update job_id=8e3ee9ca65d5 provider=<provider> model=<model>` (or pin the original values to keep them). See #44585.",
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": [
+        "file",
+        "terminal"
+      ],
+      "workdir": "E:\\_Knowledge\\ObsidianVault",
+      "fire_claim": null
+    },
+    {
+      "id": "5981bc3a96fd",
+      "name": "Night Shift \u2014 Audit Run (Sun 22:00 IST)",
+      "prompt": "Execute the Night Shift Audit Run exactly as specified in the playbook at `E:\\_Knowledge\\ObsidianVault\\playbooks\\04-audit-run.md`.\n\nYour mission: Weekly vault health sweep \u2014 find rot, stale claims, broken links, and quality drift. You are the inspector.\n\nCRITICAL: Read these files first before taking any action:\n1. `E:\\_Knowledge\\ObsidianVault\\house-rules.md` \u2014 Quality Gates & enforcement\n2. `E:\\_Knowledge\\ObsidianVault\\playbooks\\04-audit-run.md` \u2014 the full Audit protocol\n3. `E:\\_Knowledge\\ObsidianVault\\07 - SYSTEM\\index.md` \u2014 current vault structure\n\nThen execute the 7-step Audit Pipeline:\n1. VAULT HEALTH SCAN: Check for duplicates, orphans (0 incoming links, 7+ days old), broken wikilinks, missing frontmatter. Generate a health report with overall score at `3-threads/_audit/YYYY-MM-DD \u2014 Vault Health.md`.\n2. STALE CLAIM DETECTION: Scan for time-sensitive claims >6 months old without recency markers (\"as of YYYY-MM\"). Flag role claims (CEO, founder) as HIGH priority, funding numbers as HIGH, general facts as LOW.\n3. QUALITY SAMPLING: Spot-check 10-15 random atoms from `2-atoms/`, `02 - PERMANENT/concepts/`, and `wiki/concepts/`. Check each for source citation, \"For future Claude\" preamble, 2+ wikilinks, confidence marker. Calculate quality score (target: 95%+).\n4. BROKEN LINK CLEANUP: For each broken wikilink, create stubs in `3-threads/_stubs/`. Do NOT delete links \u2014 flag for morning review.\n5. WEEKLY SYNTHESIS: Look for concept co-occurrence patterns. If 3+ notes share a new theme, create a synthesis note in `05 - MAPS/`.\n6. UPDATE DASHBOARD: Append weekly metrics to `07 - SYSTEM/audit-dashboard.md` (create if missing).\n7. LOG: Append to `night-shift-log.md` with format: `## [YYYY-MM-DD 22:XX] Audit Run | Week YYYY-WNN | Score: XX/100`.\n\nIMPORTANT: Never fix issues yourself \u2014 flag them for morning review. Never delete orphaned notes. Never \"correct\" content \u2014 only flag.\n\nVault path: E:\\_Knowledge\\ObsidianVault",
+      "skills": [
+        "obsidian"
+      ],
+      "skill": "obsidian",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "nvidia",
+      "model_snapshot": "deepseek-ai/deepseek-v4-pro",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 22 * * 0",
+        "display": "0 22 * * 0"
+      },
+      "schedule_display": "0 22 * * 0",
+      "repeat": {
+        "times": null,
+        "completed": 1
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-11T16:06:52.249358+05:30",
+      "next_run_at": "2026-07-19T22:00:00+05:30",
+      "last_run_at": "2026-07-12T22:00:29.986712+05:30",
+      "last_status": "error",
+      "last_error": "RuntimeError: Skipped to prevent unintended spend: global inference config drifted since this job was created (model 'deepseek-ai/deepseek-v4-pro' -> 'google/gemma-4-31b-it'), and this job is unpinned. No inference call was made. To run on the new config, pin it explicitly: `cronjob action=update job_id=5981bc3a96fd provider=<provider> model=<model>` (or pin the original values to keep them). See #44585.",
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": [
+        "file",
+        "terminal"
+      ],
+      "workdir": "E:\\_Knowledge\\ObsidianVault",
+      "fire_claim": null
+    },
+    {
+      "id": "8aa3b1f9906b",
+      "name": "History Watchdog \u2014 Weekly Scout (Mon 02:00 IST)",
+      "prompt": "Execute the History Watchdog Scout Run for this week.\n\n## Your Mission\nRun curated research queries across 4 domains (Aryan migration, Dravidian politics, RSS/Hindutva funding, anti-caste movements) using free AI research tools. Output a structured JSON report for human review.\n\n## Setup\n- Vault: E:\\_Knowledge\\ObsidianVault\n- Queries file: E:\\_Knowledge\\ObsidianVault\\03 - PROJECTS\\History-Watchdog\\queries.yaml\n- Output: E:\\_Knowledge\\ObsidianVault\\03 - PROJECTS\\History-Watchdog\\raw\\YYYY-MM-DD-scout.json\n- Working directory: E:\\_Knowledge\\ObsidianVault\n\n## Step 1 \u2014 Read queries.yaml\nUse read_file to load E:\\_Knowledge\\ObsidianVault\\03 - PROJECTS\\History-Watchdog\\queries.yaml\nThis contains 24 queries across 4 categories. Prioritize critical queries first.\n\n## Step 2 \u2014 Run searches\nFor each query category, use browser_navigate to access free tools:\n\n**Elicit.org** (elicit.org): Academic paper search \u2014 navigate, search each query, collect paper titles/authors/abstracts/venues/publication years.\n\n**Undermind.ai** (undermind.ai): Deep academic search \u2014 navigate, search each query, collect findings with reasoning chains.\n\n**DeepSeek Deep Research** (chat.deepseek.com): Web search + structured reports \u2014 navigate to chat.deepseek.com, start deep research mode, run queries, collect structured output.\n\n**Kimi** (kimi.com): Long document summarization \u2014 use for any papers >10 pages found in other searches.\n\nFor each query:\n1. Navigate to the tool\n2. Run the search\n3. Collect: title, authors, year, venue, abstract (or executive summary for web sources)\n4. Note which tool produced it\n\n## Step 3 \u2014 Compile results\nCreate a JSON file at E:\\_Knowledge\\ObsidianVault\\03 - PROJECTS\\History-Watchdog\\raw\\2026-07-14-scout.json (use today's date)\n\nFormat:\n```json\n{\n  \"run_date\": \"YYYY-MM-DD\",\n  \"queries_run\": N,\n  \"papers_found\": N,\n  \"by_category\": {\n    \"aryan_migration\": { \"queries\": N, \"papers\": N, \"top_papers\": [...] },\n    \"dravidian_politics\": { \"queries\": N, \"papers\": N, \"top_papers\": [...] },\n    \"rss_hindutva\": { \"queries\": N, \"papers\": N, \"top_papers\": [...] },\n    \"anti_caste\": { \"queries\": N, \"papers\": N, \"top_papers\": [...] }\n  },\n  \"tier1_papers\": [...],\n  \"notes\": \"any issues, tools that failed, queries that returned nothing\"\n}\n```\n\nPrioritize tier1 venue papers (Science, Cell, Nature, PNAS, AJHG, Current Biology, PLOS Genetics).\n\n## Step 4 \u2014 Log to history-watchdog/logs/\nAppend a brief entry to E:\\_Knowledge\\ObsidianVault\\03 - PROJECTS\\History-Watchdog\\logs\\YYYY-MM-DD-run-log.md\n\n## Rules\n- Use web search for all queries \u2014 DO NOT fabricate paper titles or abstracts\n- If a tool is unavailable, note it and continue with others\n- Collect at minimum: title, authors, year, venue/source, 1-sentence summary\n- Output must be REAL data from live searches \u2014 no placeholders\n- Save to the JSON file even if some queries fail",
+      "skills": [
+        "obsidian"
+      ],
+      "skill": "obsidian",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "nvidia",
+      "model_snapshot": "minimaxai/minimax-m2.7",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 2 * * 1",
+        "display": "0 2 * * 1"
+      },
+      "schedule_display": "0 2 * * 1",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-11T16:20:14.012572+05:30",
+      "next_run_at": "2026-07-20T02:00:00+05:30",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": "E:\\_Knowledge\\ObsidianVault"
+    },
+    {
+      "id": "d844343f2730",
+      "name": "kb-weekly-healthcheck",
+      "prompt": "Run weekly knowledge base health check with auto-fix for safe operations. Output report to vault at E:/_Knowledge/ObsidianVault/06 - OUTPUTS/healthchecks/",
+      "skills": [
+        "kb-healthcheck"
+      ],
+      "skill": "kb-healthcheck",
+      "model": null,
+      "provider": null,
+      "provider_snapshot": "nvidia",
+      "model_snapshot": "nvidia/nemotron-3-ultra-550b-a55b",
+      "base_url": null,
+      "script": null,
+      "no_agent": false,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * 1",
+        "display": "0 9 * * 1"
+      },
+      "schedule_display": "0 9 * * 1",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-12T22:13:59.564622+05:30",
+      "next_run_at": "2026-07-20T09:00:00+05:30",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": "E:\\_Knowledge\\ObsidianVault"
+    }
+  ],
+  "updated_at": "2026-07-13T14:10:56.571623+05:30"
+}

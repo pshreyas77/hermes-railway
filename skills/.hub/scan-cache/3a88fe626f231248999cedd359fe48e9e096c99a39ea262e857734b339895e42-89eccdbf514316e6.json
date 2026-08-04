@@ -1,0 +1,13 @@
+{
+  "source": "https://raw.githubusercontent.com/david-internal/hermes-obsidian-capture-and-proof/main/skills/telegram-to-obsidian-capture/SKILL.md",
+  "source_url": "https://raw.githubusercontent.com/david-internal/hermes-obsidian-capture-and-proof/main/skills/telegram-to-obsidian-capture/SKILL.md",
+  "bundle_hash": "sha256:3a88fe626f231248999cedd359fe48e9e096c99a39ea262e857734b339895e42",
+  "scanner_version": "skills-guard-v1",
+  "verdict": "safe",
+  "trust_level": "community",
+  "findings": [],
+  "rules": [],
+  "scanned_at": "2026-07-13T12:48:49.179800+00:00",
+  "summary": "telegram-to-obsidian-capture: clean scan, no threats detected",
+  "fresh": true
+}

@@ -1,0 +1,50 @@
+# Dependencies
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Cache
+cache/
+*.cache
+
+# State
+state.db
+state.db-*
+*.db
+
+# Audio
+*.mp3
+*.wav
+
+# Secrets (never commit)
+.env
+*.key
+*.pem
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Railway
+.railway/

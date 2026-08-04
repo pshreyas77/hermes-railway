@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧠 Indian Philosophers & Batman — Video Playlist</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #070810;
+  font-family: 'Inter', sans-serif;
+  color: #e2e8f0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Hero ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(168,85,247,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(56,189,248,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 30% at 10% 70%, rgba(244,114,182,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-emoji {
+  font-size: 80px;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 0 40px rgba(168,85,247,0.6));
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.hero h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 900;
+  background: linear-gradient(135deg, #e2e8f0 0%, #a855f7 50%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  max-width: 700px;
+}
+
+.hero p {
+  font-size: 16px;
+  color: #64748b;
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+.stat {
+  text-align: center;
+}
+.stat-num {
+  font-size: 36px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #a855f7, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-label {
+  font-size: 11px;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.scroll-btn {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  padding: 14px 36px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 40px rgba(168,85,247,0.3);
+}
+.scroll-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 60px rgba(168,85,247,0.5);
+}
+
+/* ── Section ── */
+.section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.cat-emoji {
+  font-size: 40px;
+  filter: drop-shadow(0 0 12px currentColor);
+}
+.cat-info h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+.cat-meta {
+  font-size: 12px;
+  color: #475569;
+}
+.cat-meta span {
+  margin-right: 16px;
+}
+
+/* ── Video Card ── */
+.video-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.video-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.video-card:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+  transform: translateX(4px);
+}
+.video-card:hover::before { opacity: 1; }
+
+.vc-thumb {
+  width: 120px;
+  height: 68px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1e1e2e, #2a2a3e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+.vc-thumb .play-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+.video-card:hover .play-icon {
+  background: rgba(168,85,247,0.6);
+  transform: scale(1.1);
+}
+.vc-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vc-info { flex: 1; min-width: 0; }
+.vc-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vc-meta {
+  font-size: 11px;
+  color: #475569;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.vc-lang {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  color: #94a3b8;
+}
+.vc-lang.hi { background: rgba(251,191,36,0.15); color: #fbbf24; }
+.vc-lang.en { background: rgba(56,189,248,0.15); color: #38bdf8; }
+.vc-watch {
+  font-size: 11px;
+  color: #a855f7;
+  font-weight: 600;
+  white-space: nowrap;
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.video-card:hover .vc-watch { opacity: 1; }
+
+/* ── Books ── */
+.book-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: #94a3b8;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.book-row:hover {
+  background: rgba(255,255,255,0.05);
+  color: #e2e8f0;
+  border-color: rgba(255,255,255,0.1);
+  transform: translateX(4px);
+}
+.book-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.book-row:hover .book-icon { filter: drop-shadow(0 0 8px #fbbf24); }
+.book-watch {
+  font-size: 11px;
+  color: #fbbf24;
+  font-weight: 600;
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.book-row:hover .book-watch { opacity: 1; }
+
+.section-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #334155;
+  margin: 32px 0 14px 18px;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 40px 24px 60px;
+  color: #334155;
+  font-size: 11px;
+}
+
+/* ── Category Colors ── */
+.cat-osho::before { background: linear-gradient(180deg, #f97316, #ea580c); }
+.cat-jk::before { background: linear-gradient(180deg, #a855f7, #7c3aed); }
+.cat-ugk::before { background: linear-gradient(180deg, #38bdf8, #0ea5e9); }
+.cat-nag::before { background: linear-gradient(180deg, #fbbf24, #f59e0b); }
+.cat-char::before { background: linear-gradient(180deg, #f472b6, #ec4899); }
+.cat-bat::before { background: linear-gradient(180deg, #475569, #334155); }
+
+.osho .vc-thumb { background: linear-gradient(135deg, #431407, #7c2d12); }
+.jk .vc-thumb { background: linear-gradient(135deg, #2e1065, #4c1d95); }
+.ugk .vc-thumb { background: linear-gradient(135deg, #0c4a6e, #0e7490); }
+.nag .vc-thumb { background: linear-gradient(135deg, #451a03, #713f12); }
+.charvaka .vc-thumb { background: linear-gradient(135deg, #4a044e, #86198f); }
+.batman .vc-thumb { background: linear-gradient(135deg, #1e1e2e, #0f172a); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HERO ══════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-emoji">🧠</div>
+  <h1>Indian Philosophers & Batman<br>Video Playlist</h1>
+  <p>A curated collection of videos and books on Indian philosophy — Osho, J. Krishnamurti, U.G. Krishnamurti, Nagarjuna, Charvaka — plus the Batman philosophy archive.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">36</div><div class="stat-label">Videos</div></div>
+    <div class="stat"><div class="stat-num">15</div><div class="stat-label">Books</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Sections</div></div>
+  </div>
+  <button class="scroll-btn" onclick="document.getElementById('osho').scrollIntoView({behavior:'smooth'})">
+    ▶ Start Watching
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════ OSHO ══════════════════════════════════════════ -->
+<div class="section" id="osho">
+  <div class="category-header cat-osho">
+    <div class="cat-emoji">🧡</div>
+    <div class="cat-info">
+      <h2>Osho</h2>
+      <div class="cat-meta"><span>5 videos</span><span>3 books</span></div>
+    </div>
+  </div>
+
+  <p class="section-label">Videos</p>
+  <div class="osho">
+    <a class="video-card" href="https://www.youtube.com/OSHOInternational/playlists" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">OSHO International – Official Playlists (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Full playlist of Osho talks</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=-rc_sFcLfns" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Khushi Badhti Jaani Chahiye (Hindi)</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Osho talk in Hindi</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=VFL1m-FQIQ8" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">This Is Only a Device (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Osho talk</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=HY9aw5cQRDQ" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">The Greatest Courage Is Being Capable of Change (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Osho talk</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=ZB7OcArEMuI" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Concentration, Contemplation, Meditation (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Osho talk</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+  </div>
+
+  <p class="section-label">Books</p>
+  <a class="book-row" href="https://shop.osho.com/en/international-osho-books" target="_blank">
+    <span class="book-icon">📚</span>
+    Osho Online Bookstore (official)
+    <span class="book-watch">Browse →</span>
+  </a>
+  <a class="book-row" href="https://archive.org/details/alloshobooks39883p" target="_blank">
+    <span class="book-icon">📚</span>
+    All Osho Books – Internet Archive collection
+    <span class="book-watch">Open →</span>
+  </a>
+  <a class="book-row" href="https://oshodarshan.in" target="_blank">
+    <span class="book-icon">📚</span>
+    Osho Darshan – Hindi/English India book supplier
+    <span class="book-watch">Visit →</span>
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════ J. KRISHNAMURTI ══════════════════════════════ -->
+<div class="section" id="jk">
+  <div class="category-header cat-jk">
+    <div class="cat-emoji">💜</div>
+    <div class="cat-info">
+      <h2>J. Krishnamurti</h2>
+      <div class="cat-meta"><span>6 videos</span><span>5 books</span></div>
+    </div>
+  </div>
+
+  <p class="section-label">Videos</p>
+  <div class="jk">
+    <a class="video-card" href="https://www.youtube.com/watch?v=EJm-N4B_odA" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">A Mind That Is Free (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Krishnamurti talk</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=NMg2XhhUMeo" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Listening to the Entirety (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Krishnamurti talk</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=xbZnR7EHJ8o" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">To Live with 'What Is' (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Krishnamurti talk</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://kfoundation.org/video/" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Krishnamurti Foundation Trust – Video & Audio Index (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Krishnamurti Foundation official</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=FNe1O58GYr4" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">New York 1971 Public Talk 2 – Hindi Dubbed</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Krishnamurti talk in Hindi</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=xMHlsHDawSs" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Freedom from the Known – Hindi Explanation</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Krishnamurti explained in Hindi</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+  </div>
+
+  <p class="section-label">Books</p>
+  <a class="book-row" href="https://www.jkrishnamurti.in/store-english" target="_blank">
+    <span class="book-icon">📚</span>
+    J. Krishnamurti Official Store (English)
+    <span class="book-watch">Browse →</span>
+  </a>
+  <a class="book-row" href="https://store.kfa.org" target="_blank">
+    <span class="book-icon">📚</span>
+    Krishnamurti Bookstore (KFA)
+    <span class="book-watch">Browse →</span>
+  </a>
+  <a class="book-row" href="https://kfoundation.org/krishnamurti-books/" target="_blank">
+    <span class="book-icon">📚</span>
+    Krishnamurti Foundation – Books Overview
+    <span class="book-watch">Open →</span>
+  </a>
+  <a class="book-row" href="https://www.goodreads.com/shelf/show/jiddu-krishnamurti" target="_blank">
+    <span class="book-icon">📚</span>
+    Popular J. Krishnamurti Books – Goodreads
+    <span class="book-watch">Open →</span>
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════ U.G. KRISHNAMURTI ══════════════════════════════ -->
+<div class="section" id="ugk">
+  <div class="category-header cat-ugk">
+    <div class="cat-emoji">💙</div>
+    <div class="cat-info">
+      <h2>U.G. Krishnamurti</h2>
+      <div class="cat-meta"><span>5 videos</span><span>2 books</span></div>
+    </div>
+  </div>
+
+  <p class="section-label">Videos</p>
+  <div class="ugk">
+    <a class="video-card" href="https://www.youtube.com/watch?v=1exoQ3W-6E4&list=PLJGnfFmap7N9BTHNv4mIaqgyv-Co1K0Sy" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">U.G. Krishnamurti – Snap Out of It! (Playlist)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Full playlist</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=sx8f76kuGAY" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">You're All Afraid! (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>U.G. Krishnamurti talk</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=9HSURZ4Ca3I" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Finished! – Documentary (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Documentary on U.G. Krishnamurti</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=fkIZLOrGEgI" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Spiritual Quests Are Nonsense (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>U.G. Krishnamurti talk</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=p3dIQeWx6L0" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Complete Philosophy of U.G. Krishnamurti in Hindi</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Full explanation in Hindi</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+  </div>
+
+  <p class="section-label">Books</p>
+  <a class="book-row" href="https://www.holybooks.com/wp-content/uploads/U.G.-Krishnamurti-Mind-is-a-myth.pdf" target="_blank">
+    <span class="book-icon">📚</span>
+    Mind Is a Myth – Free PDF (HolyBooks)
+    <span class="book-watch">Download →</span>
+  </a>
+  <a class="book-row" href="https://archive.org/stream/EbookTheCourageToStandAloneU.G.Krishnamurti" target="_blank">
+    <span class="book-icon">📚</span>
+    The Courage to Stand Alone – Archive.org
+    <span class="book-watch">Open →</span>
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════ NAGARJUNA ════════════════════════════════════ -->
+<div class="section" id="nag">
+  <div class="category-header cat-nag">
+    <div class="cat-emoji">🟡</div>
+    <div class="cat-info">
+      <h2>Nagarjuna</h2>
+      <div class="cat-meta"><span>2 videos</span><span>3 books</span></div>
+    </div>
+  </div>
+
+  <p class="section-label">Videos</p>
+  <div class="nag">
+    <a class="video-card" href="https://www.youtube.com/watch?v=YMa_yf-sU30" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Nagarjuna's Middle Way: The Abandonment of Extreme Views (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Academic lecture on Mulamadhyamakakarika</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=MaeJd3F_IqQ" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Nagarjuna and Shunyavada – Hindi Explainer</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Nagarjuna's emptiness philosophy in Hindi</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+  </div>
+
+  <p class="section-label">Books</p>
+  <a class="book-row" href="https://occultnthings.com/products/nagarjuna-translation-of-his-mulamadhyamakakarika-with-introductory-essay-ihl046" target="_blank">
+    <span class="book-icon">📚</span>
+    Mulamadhyamakakarika – Inada translation (OccultThings)
+    <span class="book-watch">Buy →</span>
+  </a>
+  <a class="book-row" href="https://www.mlbd.in/products/mulamadhyamakakarika-of-nagarjuna-the-philosophy-of-the-middle-way-sanskrit-text-english-translatio" target="_blank">
+    <span class="book-icon">📚</span>
+    Mulamadhyamakakarika – MLBD (Sanskrit + English translation)
+    <span class="book-watch">Buy →</span>
+  </a>
+  <a class="book-row" href="https://www.scribd.com/document/87726659/nagarjuna-mulamadhyamakakarika" target="_blank">
+    <span class="book-icon">📚</span>
+    Mulamadhyamakakarika – Free PDF on Scribd
+    <span class="book-watch">Open →</span>
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════ CHARVAKA ══════════════════════════════════════ -->
+<div class="section" id="char">
+  <div class="category-header cat-char">
+    <div class="cat-emoji">🌸</div>
+    <div class="cat-info">
+      <h2>Charvaka</h2>
+      <div class="cat-meta"><span>2 videos</span><span>2 books</span></div>
+    </div>
+  </div>
+
+  <p class="section-label">Videos</p>
+  <div class="charvaka">
+    <a class="video-card" href="https://www.youtube.com/watch?v=FOss4KtwEGU" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Kya dharm pakhanda hai? Kya Charvaka sahi the? (Hindi)</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Was Charvaka right about religion?</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=BO9gg-HKnnE" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Understanding Charvaka Philosophy: India's Ancient Materialism (English)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Charvaka epistemology explained</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+  </div>
+
+  <p class="section-label">Books</p>
+  <a class="book-row" href="https://www.worldmets.com/hindi-book/anand-jha/charvak-darshan-by-anand-jha-hindi-pdf/" target="_blank">
+    <span class="book-icon">📚</span>
+    Charvak Darshan by Anand Jha – Hindi PDF
+    <span class="book-watch">Download →</span>
+  </a>
+  <a class="book-row" href="https://www.scribd.com/document/566621725/Charvaka-Philosophy-KV-Thomas" target="_blank">
+    <span class="book-icon">📚</span>
+    Charvaka Philosophy – K.V. Thomas (Academic PDF)
+    <span class="book-watch">Open →</span>
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════ BATMAN ══════════════════════════════════════ -->
+<div class="section" id="bat">
+  <div class="category-header cat-bat">
+    <div class="cat-emoji">🦇</div>
+    <div class="cat-info">
+      <h2>Batman — Philosophy Archive</h2>
+      <div class="cat-meta"><span>16 videos</span><span>Hindi + English</span></div>
+    </div>
+  </div>
+
+  <p class="section-label">🇮🇳 Hindi</p>
+  <div class="batman">
+    <a class="video-card" href="https://www.youtube.com/watch?v=BjDt_XNGIzs" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">5 Rules of the Batman: Bruce Wayne | The Dark Knight</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Batman philosophy, discipline, motivation</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=MYo-37nE6gE" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Batman Motivational Video | Explained in HINDI</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>5 reasons to live like Batman</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=ijRh6f8-VYk" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Batman Decoded: The Secret Behind the Mask</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Psychology and symbolism of the Batman mask</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=NObX0NhiTG8" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">The Dark Knight Trilogy Review — Best MOTIVATIONAL Movie?</div>
+        <div class="vc-meta"><span class="vc-lang hi">Hindi</span><span>Joker's ideology, why the trilogy is the best</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+
+  <p class="section-label">🇬🇧 English</p>
+    <a class="video-card" href="https://www.youtube.com/watch?v=mV_LG51IT9k" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Philosophy of Batman – Carl Jung's Shadow Archetype</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Batman integrates darkness; villains fail to integrate</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=_oNh9O1iTz4" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Philosophy of Batman — The Dark Knight Trilogy</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Resilience, endurance, overcoming fear and pain</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=jXxzGNNYIeA" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Philosophy of The Dark Knight (Batman)</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Batman and Joker as opposite symbols</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/shorts/KhHj8NIuUa4" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Batman vs Joker: Utilitarianism vs Deontology</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Moral complexities of Batman's ethics</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=KlOnSDuQprQ" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Batman The Dark Knight by Mark D. White | Philosophy</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Ethics, identity, and justice in Batman's world</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=TriBkdB-x5I" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Kant, Sade, Batman, and the Joker: Ethics of the Void</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Kantian vs Sadean philosophy</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=Zm5Iw8VNtyQ" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Why Superheroes FAIL — Nietzsche vs. Batman</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Nietzschean philosophy, Übermensch, Batman's refusal to rule</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=gcKdEHd9Kgc" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Batman v Superman Badass Philosophy</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Nietzsche's Will to Power in Zack Snyder's vision</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=pfKG3SMZkd0" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Batman, The Joker and Philosophy: Nihilism</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Joker's chaos, meaninglessness, nihilism</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=4-3BoRxT8Jk" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Why Everyone's Favorite Hero Is The Batman</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Stoicism of Batman, foils, what makes him unique</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=if-DYH8pyyk" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">The Philosophy of the Dark Knight – Tower of Babel</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Symbolic meaning, deeper philosophical themes</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+    <a class="video-card" href="https://www.youtube.com/watch?v=-a739VjqdSI" target="_blank">
+      <div class="vc-thumb"><div class="play-icon">▶</div></div>
+      <div class="vc-info">
+        <div class="vc-title">Should Batman Kill the Joker? — Crash Course Philosophy #36</div>
+        <div class="vc-meta"><span class="vc-lang en">English</span><span>Utilitarianism vs Kantian ethics</span></div>
+      </div>
+      <div class="vc-watch">Watch →</div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ FOOTER ══════════════════════════════════════ -->
+<div class="footer">
+  Indian Philosophers & Batman · 36 videos · 15 books · Sources: Philosophy_Links_Tracker.canvas + Batman Philosophy Archive.canvas
+</div>
+
+</body>
+</html>

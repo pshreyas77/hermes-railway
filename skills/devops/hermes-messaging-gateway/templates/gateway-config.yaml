@@ -1,0 +1,194 @@
+# Hermes Gateway Starter Config Template
+
+# Copy to ~/.hermes/config.yaml and customize
+# Run: hermes config edit  (to edit live)
+
+model:
+  default: nvidia/nemotron-3-ultra-550b-a55b
+  provider: nvidia
+  base_url: https://integrate.api.nvidia.com/v1
+
+agent:
+  max_turns: 60
+  tool_use_enforcement: auto
+
+# =============================================
+# MESSAGING GATEWAY PLATFORMS
+# =============================================
+# Enable one or more. Credentials go in ~/.hermes/.env (recommended)
+# or inline here (quoted strings, NOT masked)
+
+platforms:
+  # --- TELEGRAM ---
+  telegram:
+    enabled: true
+    extra:
+      # Use ${TELEGRAM_BOT_TOKEN} from .env OR inline:
+      # bot_token: "123456789:ABCdefGHIjklMNOpqrsTUVwxyz"
+      bot_token: "${TELEGRAM_BOT_TOKEN}"
+      chat_id: "${TELEGRAM_CHAT_ID}"
+      admin_chat_ids: '["${TELEGRAM_CHAT_ID}"]'
+      dm_policy: open          # open | restrictive (default)
+      # allowed_chats: ""      # optional comma-separated chat IDs
+      # webhook: false         # polling mode (default, no public URL needed)
+      # webhook_url: ""        # if webhook: true
+      # webhook_port: 8644
+
+  # --- DISCORD ---
+  # discord:
+  #   enabled: false
+  #   extra:
+  #     bot_token: "${DISCORD_BOT_TOKEN}"
+  #     application_id: "${DISCORD_APP_ID}"
+  #     public_key: "${DISCORD_PUBLIC_KEY}"
+  #     admin_user_ids: '["YOUR_USER_ID"]'
+  #     require_mention: true
+
+  # --- SLACK ---
+  # slack:
+  #   enabled: false
+  #   extra:
+  #     bot_token: "${SLACK_BOT_TOKEN}"        # xoxb-...
+  #     signing_secret: "${SLACK_SIGNING_SECRET}"
+  #     app_token: "${SLACK_APP_TOKEN}"        # xapp-... (for Socket Mode)
+  #     admin_user_ids: '["U123456"]'
+  #     require_mention: true
+
+  # --- WHATSAPP (Baileys) ---
+  # whatsapp:
+  #   enabled: false
+  #   extra:
+  #     session_name: "hermes"
+  #     admin_jids: '["1234567890@s.whatsapp.net"]'
+
+  # --- SIGNAL ---
+  # signal:
+  #   enabled: false
+  #   extra:
+  #     phone_number: "+15551234567"
+  #     admin_numbers: '["+15551234567"]'
+
+  # --- MATRIX ---
+  # matrix:
+  #   enabled: false
+  #   extra:
+  #     homeserver: "https://matrix.org"
+  #     user_id: "@hermes:matrix.org"
+  #     access_token: "${MATRIX_ACCESS_TOKEN}"
+  #     admin_user_ids: '["@admin:matrix.org"]'
+
+  # --- MICROSOFT TEAMS ---
+  # teams:
+  #   enabled: false
+  #   extra:
+  #     app_id: "${TEAMS_APP_ID}"
+  #     app_password: "${TEAMS_APP_PASSWORD}"
+  #     tenant_id: "${TEAMS_TENANT_ID}"
+
+# =============================================
+# TOOLSETS PER PLATFORM
+# =============================================
+platform_toolsets:
+  cli:
+    - browser
+    - clarify
+    - code_execution
+    - computer_use
+    - cronjob
+    - delegation
+    - file
+    - image_gen
+    - memory
+    - messaging
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - tts
+    - vision
+    - web
+
+  telegram:
+    - file
+    - terminal
+    - web
+    - obsidian
+    - cronjob
+    - delegation
+    - skills
+    - memory
+    - session_search
+    - todo
+    - image_gen
+    - vision
+    - code_execution
+    - messaging
+
+  discord:
+    - file
+    - terminal
+    - web
+    - cronjob
+    - delegation
+    - skills
+    - memory
+    - session_search
+    - todo
+
+  slack:
+    - file
+    - terminal
+    - web
+    - cronjob
+    - delegation
+    - skills
+    - memory
+    - session_search
+    - todo
+
+# =============================================
+# GATEWAY SETTINGS
+# =============================================
+gateway:
+  host: "0.0.0.0"
+  port: 8644
+  secret: "${WEBHOOK_SECRET}"   # for webhook HMAC
+
+# =============================================
+# OBSIDIAN VAULT (for obsidian toolset)
+# =============================================
+# Set in .env: OBSIDIAN_VAULT_PATH="E:/_Knowledge/ObsidianVault"
+# Or here:
+# obsidian:
+#   vault_path: "${OBSIDIAN_VAULT_PATH}"
+
+# =============================================
+# CRON (scheduled jobs)
+# =============================================
+cron:
+  wrap_response: true
+
+# =============================================
+# MEMORY
+# =============================================
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 2200
+  user_char_limit: 1375
+
+# =============================================
+# APPROVALS
+# =============================================
+approvals:
+  mode: manual    # manual | smart | off
+  timeout: 60
+
+# =============================================
+# DISPLAY (TUI/CLI)
+# =============================================
+display:
+  skin: default
+  personality: kawaii
+  show_reasoning: true
+  streaming: true
