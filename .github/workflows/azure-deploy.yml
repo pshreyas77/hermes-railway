@@ -54,7 +54,7 @@ jobs:
           imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}/hermes-bot:${{ github.sha }}
           ingress: external
           targetPort: 8000
-          envVars: |
+          environmentVariables: |
             TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
             TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
             TELEGRAM_ADMIN_CHAT_IDS=${{ secrets.TELEGRAM_ADMIN_CHAT_IDS }}
