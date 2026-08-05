@@ -22,4 +22,4 @@ COPY --chown=hermes:hermes skills ./skills
 EXPOSE 8000
 
 # Run Hermes gateway
-CMD ["hermes", "gateway", "start", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["hermes", "gateway", "run"]
