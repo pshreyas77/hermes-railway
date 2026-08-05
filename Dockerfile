@@ -10,16 +10,16 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --no-cache-dir "hermes-agent[messaging]"
 
 # Create non-root user
-RUN useradd -m -u 1000 hermes
+RUN useradd -m -u 1000 -s /bin/bash hermes
 USER hermes
 WORKDIR /home/hermes
 
-# Copy config
-COPY --chown=hermes:hermes config.yaml ./
-COPY --chown=hermes:hermes skills ./skills
+# Copy config and skills
+COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
+COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
 
-# Expose gateway port
+# Expose gateway port (Azure routes to this)
 EXPOSE 8000
 
-# Run Hermes gateway (this is the working CMD from this morning)
+# Run Hermes gateway (this is what was working in the morning)
 CMD ["hermes", "gateway", "run"]
