@@ -38,8 +38,11 @@ jobs:
           context: .
           push: true
           tags: ${{ env.AZURE_CONTAINER_REGISTRY }}/hermes-bot:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Disabled layer caching to ensure Telegram extra is installed
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
+          # Enable full rebuild
+          no-cache: true
 
       - name: Azure Login
         uses: azure/login@v2
