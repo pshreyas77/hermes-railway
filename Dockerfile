@@ -24,5 +24,6 @@ COPY --chown=hermes:hermes health_server.py ./
 # Expose gateway port
 EXPOSE 8000
 
-# Run health server in background, then Hermes gateway
-CMD ["sh", "-c", "python health_server.py & hermes gateway run"]
+# Hermes gateway listens on port 8000 and handles /health, /webhook, etc.
+# Use exec form so the shell doesn't fork - the gateway is the main process.
+CMD ["hermes", "gateway", "run", "--host", "0.0.0.0", "--port", "8000"]
