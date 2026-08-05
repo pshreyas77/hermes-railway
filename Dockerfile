@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Hermes with telegram extra
+# Install Hermes with messaging extra
 RUN pip install --no-cache-dir "hermes-agent[messaging]"
 
 # Create non-root user
@@ -18,8 +18,11 @@ WORKDIR /home/hermes
 COPY --chown=hermes:hermes config.yaml ./
 COPY --chown=hermes:hermes skills ./skills
 
+# Add health check server (runs on port 8000 for Azure health checks)
+COPY --chown=hermes:hermes health_server.py ./
+
 # Expose gateway port
 EXPOSE 8000
 
-# Run Hermes gateway
-CMD ["hermes", "gateway", "run"]
+# Run health server in background, then Hermes gateway
+CMD ["sh", "-c", "python health_server.py & hermes gateway run"]
