@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Hermes with telegram extra
-RUN pip install --no-cache-dir "hermes-agent[telegram]"
+RUN pip install --no-cache-dir "hermes-agent[messaging]"
 
 # Create non-root user
 RUN useradd -m -u 1000 hermes
