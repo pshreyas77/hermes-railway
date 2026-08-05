@@ -1,29 +1,16 @@
-FROM python:3.11-slim
+FROM nousresearch/hermes-agent:latest
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# Switch to root to install our config
+USER root
 
-# Install Hermes with messaging extra
-RUN pip install --no-cache-dir "hermes-agent[messaging]"
+# Copy custom config and skills into the Hermes config directory
+COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
+COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
 
-# Create non-root user
-RUN useradd -m -u 1000 hermes
 USER hermes
-WORKDIR /home/hermes
 
-# Copy config
-COPY --chown=hermes:hermes config.yaml ./
-COPY --chown=hermes:hermes skills ./skills
-
-# Add health check server (runs on port 8000 for Azure health checks)
-COPY --chown=hermes:hermes health_server.py ./
-
-# Expose gateway port
+# Expose gateway port (Hermes gateway listens on 8000 by default in container)
 EXPOSE 8000
 
-# Hermes gateway listens on port 8000 and handles /health, /webhook, etc.
-# Use exec form so the shell doesn't fork - the gateway is the main process.
-CMD ["hermes", "gateway", "run", "--host", "0.0.0.0", "--port", "8000"]
+# Run the Hermes gateway in the foreground (s6-overlay will manage it)
+CMD ["hermes", "gateway", "run", "--no-supervise", "--force"]
