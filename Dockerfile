@@ -1,19 +1,17 @@
 FROM nousresearch/hermes-agent:latest
 
-# Switch to root to install our config
+# Switch to root to add our cont-init.d script
 USER root
 
 # Copy custom config and skills into the Hermes config directory
-COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
-COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
-COPY --chown=hermes:hermes start.sh /home/hermes/start.sh
+COPY --chown=10000:10000 config.yaml /opt/data/.hermes/config.yaml
+COPY --chown=10000:10000 skills /opt/data/.hermes/skills
 
-RUN chmod +x /home/hermes/start.sh
+# Copy cont-init.d script to write .env from environment variables
+COPY --chmod=0755 cont-init.d/01-write-env.sh /etc/cont-init.d/01-write-env.sh
 
-USER hermes
+# Switch back to hermes user
+USER 10000
 
-# Expose gateway port (Hermes gateway listens on 8000 by default in container)
-EXPOSE 8000
-
-# Run the Hermes gateway via startup script
-CMD ["/home/hermes/start.sh"]
+# The official image's ENTRYPOINT + s6-overlay will run our cont-init.d script,
+# then start the gateway service automatically
