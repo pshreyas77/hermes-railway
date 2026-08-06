@@ -1,30 +1,16 @@
-FROM python:3.11-slim
+FROM nousresearch/hermes-agent:latest
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# Switch to root to install our config
+USER root
 
-# Install Hermes with messaging extra (for Telegram)
-RUN pip install --no-cache-dir "hermes-agent[messaging]"
-
-# Create non-root user with bash shell and home directory
-RUN useradd -m -u 1000 -s /bin/bash hermes
-USER hermes
-WORKDIR /home/hermes
-
-# Pre-create .hermes directory and copy config (using absolute path)
-RUN mkdir -p /home/hermes/.hermes
+# Copy custom config and skills into the Hermes config directory
 COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
 COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
-COPY --chown=hermes:hermes start.sh /home/hermes/start.sh
 
-# Ensure startup script is executable
-RUN chmod +x /home/hermes/start.sh
+USER hermes
 
-# Expose gateway port
+# Expose gateway port (Hermes gateway listens on 8000 by default in container)
 EXPOSE 8000
 
-# Run startup script which writes .env and starts the gateway
-CMD ["/home/hermes/start.sh"]
+# Run the Hermes gateway in the foreground (s6-overlay will manage it)
+CMD ["hermes", "gateway", "run", "--no-supervise", "--force"]
