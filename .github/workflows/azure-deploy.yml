@@ -46,7 +46,26 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Container Apps
+      - name: Delete old Container App
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            set -e
+            APP_NAME="${{ env.CONTAINER_APP_NAME }}"
+            RG="${{ env.RESOURCE_GROUP }}"
+            echo "Deleting existing Container App..."
+            az containerapp delete --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --yes --output none 2>/dev/null || echo "App didn't exist"
+            # Wait for deletion to complete
+            for i in {1..30}; do
+              if ! az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "name" -o tsv 2>/dev/null; then
+                echo "App deleted successfully"
+                break
+              fi
+              echo "Waiting for deletion... ($i/30)"
+              sleep 5
+            done
+
+      - name: Create new Container App
         uses: azure/CLI@v2
         with:
           inlineScript: |
@@ -58,12 +77,6 @@ jobs:
             ENV="${{ env.CONTAINER_APP_ENV }}"
             ACR="${{ env.AZURE_CONTAINER_REGISTRY }}"
             
-            # Delete existing Container App to clear stuck revisions
-            echo "Deleting existing Container App (if any)..."
-            az containerapp delete --name "$APP_NAME" --resource-group "$RG" --yes --output none 2>/dev/null || echo "App didn't exist, continuing..."
-            sleep 10
-            
-            # Create new Container App
             echo "Creating new Container App..."
             az containerapp create \
               --name "$APP_NAME" \
@@ -87,3 +100,41 @@ jobs:
             
             echo "=== Deployment complete ==="
             az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "{name:name, fqdn:properties.configuration.ingress.fqdn, state:properties.runningStatus}" -o json
+
+      - name: Verify health endpoint
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            set -e
+            APP_NAME="${{ env.CONTAINER_APP_NAME }}"
+            RG="${{ env.RESOURCE_GROUP }}"
+            
+            # Get the FQDN
+            FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
+            echo "FQDN: $FQDN"
+            
+            # Wait for health endpoint to respond
+            for i in {1..30}; do
+              echo "Checking health endpoint... ($i/30)"
+              if curl -s -m 10 "https://$FQDN/health" | grep -q "healthy"; then
+                echo "Health endpoint responding!"
+                curl -s "https://$FQDN/health"
+                exit 0
+              fi
+              echo "Waiting... ($i/30)"
+              sleep 10
+            done
+            echo "Health check failed after 5 minutes"
+            exit 1
+
+      - name: Set webhook
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            set -e
+            FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
+            WEBHOOK_URL="https://$FQDN/webhooks/telegram"
+            echo "Setting webhook to: $WEBHOOK_URL"
+            curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/setWebhook" \
+              -d "url=$WEBHOOK_URL" \
+              -d "secret_token=hermes-webhook-secret-2026-08-06"
