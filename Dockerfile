@@ -18,7 +18,6 @@ WORKDIR /home/hermes
 COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
 COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
 COPY --chown=hermes:hermes start.sh /home/hermes/start.sh
-COPY --chown=hermes:hermes health_server.py /home/hermes/health_server.py
 
 RUN chmod +x /home/hermes/start.sh
 
