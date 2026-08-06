@@ -16,5 +16,5 @@ EOF
 echo "Wrote .env file"
 ls -la ~/.hermes/
 
-echo "Starting Hermes gateway..."
-exec hermes gateway run
+echo "Starting Hermes gateway with --no-supervise for container..."
+exec hermes gateway run --no-supervise
