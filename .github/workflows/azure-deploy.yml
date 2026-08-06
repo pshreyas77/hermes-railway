@@ -70,6 +70,8 @@ jobs:
                 --image "$IMAGE" \
                 --target-port 8000 \
                 --ingress external \
+                --min-replicas 1 \
+                --max-replicas 1 \
                 --registry-server "$ACR" \
                 --registry-username "${{ secrets.ACR_USERNAME }}" \
                 --registry-password "${{ secrets.ACR_PASSWORD }}" \
@@ -86,6 +88,8 @@ jobs:
                 --name "$APP_NAME" \
                 --resource-group "$RG" \
                 --image "$IMAGE" \
+                --min-replicas 1 \
+                --max-replicas 1 \
                 --set-env-vars \
                   TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
                   TELEGRAM_CHAT_ID="${{ secrets.TELEGRAM_CHAT_ID }}" \
