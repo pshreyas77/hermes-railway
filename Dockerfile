@@ -20,7 +20,7 @@ COPY --chown=hermes:hermes config.yaml ~/.hermes/config.yaml
 COPY --chown=hermes:hermes skills ~/.hermes/skills
 
 # Create startup script that writes .env from environment variables
-RUN printf '#!/bin/sh\nmkdir -p ~/.hermes\ncat > ~/.hermes/.env <<EOF\nNVIDIA_API_KEY=${NVIDIA_API_KEY}\nTELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}\nTELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}\nTELEGRAM_ADMIN_CHAT_IDS=${TELEGRAM_ADMIN_CHAT_IDS}\nGATEWAY_ALLOW_ALL_USERS=${GATEWAY_ALLOW_ALL_USERS}\nEOF\necho "Wrote .env"\nexec hermes gateway run --no-supervise\n' > /home/hermes/start.sh && chmod +x /home/hermes/start.sh
+RUN printf '#!/bin/sh\nmkdir -p ~/.hermes\ncat > ~/.hermes/.env <<EOF\nNVIDIA_API_KEY=${NVIDIA_API_KEY}\nTELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}\nTELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}\nTELEGRAM_ADMIN_CHAT_IDS=${TELEGRAM_ADMIN_CHAT_IDS}\nGATEWAY_ALLOW_ALL_USERS=${GATEWAY_ALLOW_ALL_USERS}\nEOF\necho "Wrote .env"\necho "Starting Hermes gateway..."\nexec hermes gateway run --no-supervise -v\n' > /home/hermes/start.sh && chmod +x /home/hermes/start.sh
 
 # Expose gateway port
 EXPOSE 8000
