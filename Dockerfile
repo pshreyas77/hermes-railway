@@ -9,16 +9,18 @@ RUN apt-get update && apt-get install -y \
 # Install Hermes with messaging extra (for Telegram)
 RUN pip install --no-cache-dir "hermes-agent[messaging]"
 
-# Create non-root user with bash shell
+# Create non-root user with bash shell and home directory
 RUN useradd -m -u 1000 -s /bin/bash hermes
 USER hermes
 WORKDIR /home/hermes
 
-# Copy config, skills and startup script
-COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
-COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
+# Pre-create .hermes directory and copy config
+RUN mkdir -p ~/.hermes
+COPY --chown=hermes:hermes config.yaml ~/.hermes/config.yaml
+COPY --chown=hermes:hermes skills ~/.hermes/skills
 COPY --chown=hermes:hermes start.sh /home/hermes/start.sh
 
+# Ensure startup script is executable
 RUN chmod +x /home/hermes/start.sh
 
 # Expose gateway port
