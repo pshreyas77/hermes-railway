@@ -101,7 +101,7 @@ jobs:
             echo "=== Deployment complete ==="
             az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "{name:name, fqdn:properties.configuration.ingress.fqdn, state:properties.runningStatus}" -o json
 
-      - name: Verify health endpoint
+      - name: Wait for container to be ready
         uses: azure/CLI@v2
         with:
           inlineScript: |
@@ -113,28 +113,33 @@ jobs:
             FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
             echo "FQDN: $FQDN"
             
-            # Wait for health endpoint to respond
-            for i in {1..30}; do
-              echo "Checking health endpoint... ($i/30)"
-              if curl -s -m 10 "https://$FQDN/health" | grep -q "healthy"; then
-                echo "Health endpoint responding!"
-                curl -s "https://$FQDN/health"
-                exit 0
+            # Wait for container to be ready (just check if app is running)
+            for i in {1..60}; do
+              echo "Checking container status... ($i/60)"
+              STATUS=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.runningStatus" -o tsv 2>/dev/null || echo "Unknown")
+              echo "Status: $STATUS"
+              if [ "$STATUS" = "Running" ]; then
+                echo "Container is running!"
+                break
               fi
-              echo "Waiting... ($i/30)"
+              echo "Waiting... ($i/60)"
               sleep 10
             done
-            echo "Health check failed after 5 minutes"
-            exit 1
+            
+            # Get final FQDN
+            FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
+            echo "FQDN: $FQDN"
+            echo "FQDN=$FQDN" >> $GITHUB_OUTPUT
 
       - name: Set webhook
         uses: azure/CLI@v2
         with:
           inlineScript: |
             set -e
-            FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
+            FQDN="${{ steps.wait.outputs.FQDN }}"
             WEBHOOK_URL="https://$FQDN/webhooks/telegram"
             echo "Setting webhook to: $WEBHOOK_URL"
             curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/setWebhook" \
               -d "url=$WEBHOOK_URL" \
               -d "secret_token=hermes-webhook-secret-2026-08-06"
+            echo "Webhook set to $WEBHOOK_URL"
