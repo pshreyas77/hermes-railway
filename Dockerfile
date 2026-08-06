@@ -14,10 +14,10 @@ RUN useradd -m -u 1000 -s /bin/bash hermes
 USER hermes
 WORKDIR /home/hermes
 
-# Pre-create .hermes directory and copy config
-RUN mkdir -p ~/.hermes
-COPY --chown=hermes:hermes config.yaml ~/.hermes/config.yaml
-COPY --chown=hermes:hermes skills ~/.hermes/skills
+# Pre-create .hermes directory and copy config (using absolute path)
+RUN mkdir -p /home/hermes/.hermes
+COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
+COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
 COPY --chown=hermes:hermes start.sh /home/hermes/start.sh
 
 # Ensure startup script is executable
