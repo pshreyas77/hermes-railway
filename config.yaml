@@ -311,10 +311,14 @@ platforms:
       chat_id: '${TELEGRAM_CHAT_ID}'
       dm_policy: open
   webhook:
-    enabled: true
-    extra:
-      host: "0.0.0.0"
-      port: 8000
+      enabled: true
+      extra:
+        host: "0.0.0.0"
+        port: 8000
+        routes:
+          telegram:
+            secret: "INSECURE_NO_AUTH"
+            deliver: "telegram"
 session_reset:
   at_hour: 4
   idle_minutes: 1440
