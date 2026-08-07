@@ -56,7 +56,10 @@ SHEOF
 RUN chmod +x /home/hermes/sync_vault.sh
 
 # Create startup script
-RUN cat > /home/hermes/start.sh << 'STARTEOF'
+# Verify skills directory exists and list skills
+RUN ls -la ~/.hermes/skills/ && ls -la ~/.hermes/skills/second-brain/
+
+RUN cat > /home/hermes/start.sh << 'STARTEOF' 
 #!/bin/sh
 echo "[start.sh] $(date) - HERMES BOT STARTING"
 set +e
