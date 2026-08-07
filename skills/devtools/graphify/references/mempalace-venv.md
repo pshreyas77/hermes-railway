@@ -10,12 +10,12 @@ and crashes immediately on every command:
 ModuleNotFoundError: No module named 'numpy._core._multiarray_umath'
 ```
 
-The toolchain installed at `E:/_Dev_Tools/mempalace/` has its own venv with the
+The toolchain installed at `/home/hermes/mempalace/` has its own venv with the
 correct ABI-linked numpy and chromadb. Run from there:
 
 ```
-cd E:/_Dev_Tools/mempalace && python -m mempalace status
-cd E:/_Dev_Tools/mempalace && python -m mempalace sweep "C:/Users/shrey/.claude/projects/<proj>/"
+cd /home/hermes/mempalace && python -m mempalace status
+cd /home/hermes/mempalace && python -m mempalace sweep "C:/Users/shrey/.claude/projects/<proj>/"
 ```
 
 (Use `"..."` quoted Windows-style paths in `sweep` — POSIX paths raised
@@ -36,6 +36,6 @@ cd E:/_Dev_Tools/mempalace && python -m mempalace sweep "C:/Users/shrey/.claude/
 ## Typical cron-job combo (graphify + mempalace sweep)
 
 ```bash
-cd E:/_Knowledge/ObsidianVault && graphify update E:/_Knowledge/ObsidianVault --update
-cd E:/_Dev_Tools/mempalace     && python -m mempalace sweep "C:/Users/shrey/.claude/projects/E---Knowledge-ObsidianVault/"
+cd /vault && graphify update /vault --update
+cd /home/hermes/mempalace     && python -m mempalace sweep "C:/Users/shrey/.claude/projects/E---Knowledge-ObsidianVault/"
 ```
