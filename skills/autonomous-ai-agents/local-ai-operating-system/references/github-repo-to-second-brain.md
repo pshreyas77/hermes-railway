@@ -16,7 +16,7 @@ When the user asks any variant of "wire X repository into my second brain"
 All installs/clones/source code/data → `E:` drive. Never `C:`.
 
 ```bash
-cd "E:/_Dev_Tools" && git clone --depth=1 https://github.com/<owner>/<repo>.git
+cd "/home/hermes" && git clone --depth=1 https://github.com/<owner>/<repo>.git
 ```
 
 **Alternative (canonical graphify cache):** `graphify clone <url>` lands the
@@ -38,7 +38,7 @@ need the full history.
 
 ## Step 2 — Entity registration
 
-Append to `E:/_Knowledge/ObsidianVault/entities.json`:
+Append to `/vault/entities.json`:
 
 ```json
 {
@@ -59,8 +59,8 @@ won't link the project's drawers to its author/vault references.
 ## Step 3 — Mine into MemPalace
 
 ```bash
-cd "E:/_Dev_Tools/mempalace" && \
-    ./mp.sh mine "E:/_Dev_Tools/<repo>" --wing <short-name>
+cd "/home/hermes/mempalace" && \
+    ./mp.sh mine "/home/hermes/<repo>" --wing <short-name>
 ```
 
 **CLI shape (verified Jul-2026):**
@@ -72,7 +72,7 @@ cd "E:/_Dev_Tools/mempalace" && \
 **Dry run first if uncertain:**
 
 ```bash
-./mp.sh mine "E:/_Dev_Tools/<repo>" --wing <short-name> --dry-run
+./mp.sh mine "/home/hermes/<repo>" --wing <short-name> --dry-run
 # Look for "Files processed" + "Drawers filed" + acceptable skip count
 ```
 
@@ -99,15 +99,15 @@ Don't redo the mine.
 # A — if you cloned to the canonical cache dir in step 1:
 cd "C:/Users/shrey/.graphify/repos/<owner>/<repo>" && graphify update .
 
-# B — if you cloned to E:/_Dev_Tools/<repo> in step 1:
-cd "E:/_Dev_Tools/<repo>" && graphify update .
+# B — if you cloned to /home/hermes/<repo> in step 1:
+cd "/home/hermes/<repo>" && graphify update .
 ```
 
 **Critical — bare `graphify <path>` FAILS:**
 
 ```
-$ graphify "E:/_Dev_Tools/knowledge_graph"
-error: unknown command 'E:/_Dev_Tools/knowledge_graph'
+$ graphify "/home/hermes/knowledge_graph"
+error: unknown command '/home/hermes/knowledge_graph'
 ```
 
 The CLI does NOT accept a path arg at the top level. Always `cd` into the
@@ -129,7 +129,7 @@ head -60 <repo>/graphify-out/GRAPH_REPORT.md
 
 ## Step 5 — Wikilinked vault note
 
-Write to `E:/_Knowledge/ObsidianVault/wiki/<short-name>.md` with:
+Write to `/vault/wiki/<short-name>.md` with:
 
 ```markdown
 ---
@@ -142,7 +142,7 @@ license: <SPDX id>
 stars: <count>
 forks: <count>
 cloned: <YYYY-MM-DD>
-cloned-path: E:/_Dev_Tools/<repo>
+cloned-path: /home/hermes/<repo>
 ---
 
 # <short-name>
@@ -177,7 +177,7 @@ existing stack.]
 ## Sources
 
 - Repo: <URL> — verified live on <DATE>
-- Local clone: `E:/_Dev_Tools/<repo>/`
+- Local clone: `/home/hermes/<repo>/`
 ```
 
 **Tags to consider:** `second-brain-source`, the topic domain
@@ -196,7 +196,7 @@ tools, link them with `[[wikilink]]` syntax — `[[graphify]]`,
 |---|---|---|
 | 1 | MemPalace drawer count grew | `./mp.sh status` shows new wing OR +~drawer-count delta on existing wing |
 | 2 | Graphify output exists | `ls <repo>/graphify-out/{graph.json,graph.html,GRAPH_REPORT.md}` → all three |
-| 3 | Vault note reachable | `search_files pattern=<short-name>.md path=E:/_Knowledge/ObsidianVault/wiki` returns ≥1 |
+| 3 | Vault note reachable | `search_files pattern=<short-name>.md path=/vault/wiki` returns ≥1 |
 | 4 | Search actually returns | `./mp.sh search "<known phrase from corpus>"` returns ≥1 result (BM25 is fine) |
 | 5 | Entity registered | `cat entities.json | jq '.projects' | grep <short-name>` matches |
 
@@ -243,4 +243,4 @@ This was the session this recipe was verified in. Key results:
 | Foreground timeout? | No, but mining hit ~20 min — could have used background |
 
 `GRAPH_REPORT.md` is at `C:/Users/shrey/.graphify/repos/rahulnyk/knowledge_graph/graphify-out/`.
-Vault note is at `E:/_Knowledge/ObsidianVault/wiki/knowledge_graph_repo.md`.
+Vault note is at `/vault/wiki/knowledge_graph_repo.md`.
