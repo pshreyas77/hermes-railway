@@ -22,14 +22,14 @@ the rest of the system.
 
 | What | Path |
 |------|------|
-| CLI wrapper | `E:/_Dev_Tools/mempalace/mp.sh` |
-| Source tree | `E:/_Dev_Tools/mempalace/` |
+| CLI wrapper | `/home/hermes/mempalace/mp.sh` |
+| Source tree | `/home/hermes/mempalace/` |
 | **Palace data** | `C:/Users/shrey/.mempalace/palace/` |
-| **Repo-mirrored palace in source tree** | `E:/_Dev_Tools/mempalace/palace/` (does not exist on this system — the palace lives outside the source repo) |
-| Entities | `E:/_Knowledge/ObsidianVault/entities.json` |
-| Pre-repair safety backups | `E:/.mempalace-pre-repair-backup/` |
+| **Repo-mirrored palace in source tree** | `/home/hermes/mempalace/palace/` (does not exist on this system — the palace lives outside the source repo) |
+| Entities | `/vault/entities.json` |
+| Pre-repair safety backups | `/home/hermes/.mempalace-pre-repair-backup/` |
 
-**Pitfall — misreading the source tree**: `E:/_Dev_Tools/mempalace/` contains
+**Pitfall — misreading the source tree**: `/home/hermes/mempalace/` contains
 plugin-style directories (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`,
 `.agents/`, `.agent/`). These belong to **MemPalace** — MemPalace ships MCP-server
 plugin manifests for multiple IDEs (`mcp.json` at repo root). They look like
@@ -49,15 +49,15 @@ against an abnormal exit mid-repair.
 ```bash
 TS=$(date +%Y%m%dT%H%M%S)
 cp "C:/Users/shrey/.mempalace/palace/chroma.sqlite3" \
-   "E:/.mempalace-pre-repair-backup/chroma.sqlite3.pre-repair-${TS}"
-cp "E:/_Knowledge/ObsidianVault/entities.json" \
-   "E:/.mempalace-pre-repair-backup/entities.json.pre-repair-${TS}" 2>/dev/null
+   "/home/hermes/.mempalace-pre-repair-backup/chroma.sqlite3.pre-repair-${TS}"
+cp "/vault/entities.json" \
+   "/home/hermes/.mempalace-pre-repair-backup/entities.json.pre-repair-${TS}" 2>/dev/null
 ```
 
 ### 2. Run repair interactively without `--yes` first to preview
 
 ```bash
-E:/_Dev_Tools/mempalace/mp.sh repair
+/home/hermes/mempalace/mp.sh repair
 # Expected output:
 #   MemPalace Repair
 #   Palace: C:\Users\shrey\.mempalace\palace
@@ -72,7 +72,7 @@ If the prompt shows the right drawer count (matches a recent `status`), proceed.
 ### 3. Confirm and run
 
 ```bash
-E:/_Dev_Tools/mempalace/mp.sh repair --yes
+/home/hermes/mempalace/mp.sh repair --yes
 ```
 
 The wrapper auto-creates a backup at `C:/Users/shrey/.mempalace/palace.backup/`
@@ -80,7 +80,7 @@ The wrapper auto-creates a backup at `C:/Users/shrey/.mempalace/palace.backup/`
 ### 4. Verify vector search works again
 
 ```bash
-E:/_Dev_Tools/mempalace/mp.sh search "any test query"
+/home/hermes/mempalace/mp.sh search "any test query"
 ```
 
 Success: results show numeric `Match:` with vector scores (e.g.
@@ -92,7 +92,7 @@ still fails, see "When repair fails" below.
 ### 5. Confirm drawer count and structure unchanged
 
 ```bash
-E:/_Dev_Tools/mempalace/mp.sh status
+/home/hermes/mempalace/mp.sh status
 ```
 
 The drawer count and per-room totals should match what they were before repair.
@@ -131,7 +131,7 @@ mempalace without the wrapper, you can pick up stale C: sidecars that
 contradict E: state (Chroma's cache dir in particular). Always:
 
 ```bash
-E:/_Dev_Tools/mempalace/mp.sh <anything>
+/home/hermes/mempalace/mp.sh <anything>
 ```
 
 ## Pitfall — flag positioning with `mp.sh`
