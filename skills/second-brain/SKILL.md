@@ -18,9 +18,9 @@ The command may arrive as:
 
 ## Vault path
 
-The vault is cloned from `https://github.com/pshreyas77/MYOBSIDIAN-VAULT` at container startup and lives at `/vault`.
+The vault is cloned from `https://github.com/pshreyas77/MYOBSIDIAN-VAULT` at container startup and lives at `/vault` inside the running container.
 
-**IMPORTANT**: File tools (`read_file`, `search_files`) do NOT automatically use `OBSIDIAN_VAULT_PATH`. You must explicitly pass paths under `/vault/...` when calling file tools.
+**CRITICAL**: You MUST explicitly pass paths under `/vault/...` when calling file tools. The `OBSIDIAN_VAULT_PATH` environment variable is set but file tools do NOT auto-resolve it. Always use `/vault/...` as the path prefix.
 
 If `/vault` does not exist or is empty, tell the user the vault isn't synced yet.
 
@@ -28,11 +28,11 @@ If `/vault` does not exist or is empty, tell the user the vault isn't synced yet
 
 1. **Parse the command.** If no query follows `/second-brain`, list top-level folders using `search_files(target="files", pattern="*", path="/vault")`.
 
-2. **Search the vault.** For a query, run `search_files(target="content", pattern="<query>", path="/vault", file_glob="*.md")`.
+2. **Search the vault.** For a query like `/second-brain resume`, run `search_files(target="content", pattern="resume", path="/vault", file_glob="*.md")`.
 
 3. **Open the top 3 hits.** Read with `read_file(path="/vault/<relative_path>")`.
 
-4. **Compose answer.** Short summary + bulleted list with paths and one-line excerpts. Stay under ~1500 chars.
+3. **Compose answer.** Short summary + bulleted list with paths and one-line excerpts. Stay under ~1500 chars.
 
 ## Safety
 
