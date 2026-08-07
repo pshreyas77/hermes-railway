@@ -103,21 +103,8 @@ jobs:
                 GATEWAY_ALLOW_ALL_USERS=true \
               --output none
             
-            # Add port 8080 for health endpoint
-            az containerapp update \
-              --name "$APP_NAME" \
-              --resource-group "$RG" \
-              --set-env-vars "HEALTH_PORT=8080" \
-              --output none || echo "Port update skipped"
-
-            # Add the additional port mapping for health
-            az containerapp ingress update \
-              --name "$APP_NAME" \
-              --resource-group "$RG" \
-              --type external \
-              --target-port 8000 \
-              --transport auto \
-              --allow-insecure false || echo "Ingress update skipped" 
+            # Only port 8000 needed - gateway handles webhook on same port
+            echo "Using single port 8000 for gateway + webhook" 
             
             echo "=== Deployment complete ==="
             az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "{name:name, fqdn:properties.configuration.ingress.fqdn, state:properties.runningStatus}" -o json
@@ -138,13 +125,13 @@ jobs:
               echo "Status: $STATUS"
               if [ "$STATUS" = "Running" ]; then
                 echo "Container is running! Waiting for gateway health..."
-                # Wait for health endpoint to respond
+                # Wait for gateway to be ready (poll webhook endpoint on 8000)
                 for j in {1..30}; do
-                  if curl -sf "https://${{ env.CONTAINER_APP_NAME }}.koreacentral.azurecontainerapps.io/health" > /dev/null 2>&1; then
-                    echo "Health endpoint responding!"
+                  if curl -sf "https://${{ env.CONTAINER_APP_NAME }}.koreacentral.azurecontainerapps.io/webhooks/telegram" > /dev/null 2>&1; then
+                    echo "Gateway webhook endpoint responding!"
                     break
                   fi
-                  echo "Waiting for health... ($j/30)"
+                  echo "Waiting for gateway... ($j/30)"
                   sleep 3
                 done
                 break
