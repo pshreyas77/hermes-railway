@@ -107,6 +107,7 @@ jobs:
             az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "{name:name, fqdn:properties.configuration.ingress.fqdn, state:properties.runningStatus}" -o json
 
       - name: Wait for container to be ready
+        id: wait
         uses: azure/CLI@v2
         with:
           inlineScript: |
@@ -114,11 +115,7 @@ jobs:
             APP_NAME="${{ env.CONTAINER_APP_NAME }}"
             RG="${{ env.RESOURCE_GROUP }}"
             
-            # Get the FQDN
-            FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
-            echo "FQDN: $FQDN"
-            
-            # Wait for container to be ready (just check if app is running)
+            # Wait for container to be ready
             for i in {1..60}; do
               echo "Checking container status... ($i/60)"
               STATUS=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.runningStatus" -o tsv 2>/dev/null || echo "Unknown")
@@ -131,17 +128,21 @@ jobs:
               sleep 10
             done
             
-            # Get final FQDN
+            # Get final FQDN and export it
             FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
             echo "FQDN: $FQDN"
-            echo "FQDN=$FQDN" >> $GITHUB_OUTPUT
+            echo "fqdn=$FQDN" >> "$GITHUB_OUTPUT"
 
       - name: Set webhook
         uses: azure/CLI@v2
         with:
           inlineScript: |
             set -e
-            FQDN="${{ steps.wait.outputs.FQDN }}"
+            FQDN="${{ steps.wait.outputs.fqdn }}"
+            if [ -z "$FQDN" ]; then
+              echo "ERROR: FQDN is empty - cannot set webhook"
+              exit 1
+            fi
             WEBHOOK_URL="https://$FQDN/webhooks/telegram"
             echo "Setting webhook to: $WEBHOOK_URL"
             curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/setWebhook" \
