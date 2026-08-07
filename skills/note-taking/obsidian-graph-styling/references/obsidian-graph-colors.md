@@ -139,16 +139,16 @@ Fill color should be dark (near-black with tint of the hue), stroke should be th
 
 ```bash
 # 1. After writing graph.json, always save permanent backup
-cp "E:/_Knowledge/ObsidianVault/.obsidian/graph.json" \
-   "E:/_Knowledge/ObsidianVault/.obsidian/graph.json.backup.permanent"
+cp "/vault/.obsidian/graph.json" \
+   "/vault/.obsidian/graph.json.backup.permanent"
 
 # 2. When Obsidian overwrites it (restore)
-cp "E:/_Knowledge/ObsidianVault/.obsidian/graph.json.backup.permanent" \
-   "E:/_Knowledge/ObsidianVault/.obsidian/graph.json"
+cp "/vault/.obsidian/graph.json.backup.permanent" \
+   "/vault/.obsidian/graph.json"
 
-# Script: E:/_Knowledge/ObsidianVault/.obsidian/restore-graph-colors.sh
+# Script: /vault/.obsidian/restore-graph-colors.sh
 #!/usr/bin/env bash
-VAULT="E:/_Knowledge/ObsidianVault"
+VAULT="/vault"
 cp "$VAULT/.obsidian/graph.json" "$VAULT/.obsidian/graph.json.backup.before_restore"
 cp "$VAULT/.obsidian/graph.json.backup.permanent" "$VAULT/.obsidian/graph.json"
 echo "✅ Restored from permanent backup"
@@ -163,7 +163,7 @@ Location: `{vault}/.obsidian/restore-graph-colors.sh`
 # Graph Color Configuration Loader — Updated for current vault structure
 # Run this after opening Obsidian to apply color groups
 
-GRAPH_FILE="E:/_Knowledge/ObsidianVault/.obsidian/graph.json"
+GRAPH_FILE="/vault/.obsidian/graph.json"
 
 # Check if Obsidian has overwritten the file (colorGroups empty or missing)
 if ! grep -q '"colorGroups"' "$GRAPH_FILE" 2>/dev/null || [ "$(grep -c '"colorGroups": \[\]' "$GRAPH_FILE")" -eq 1 ]; then
