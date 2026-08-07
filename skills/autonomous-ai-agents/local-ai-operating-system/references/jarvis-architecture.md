@@ -59,7 +59,7 @@ Persistence: Obsidian Vault + MemPalace + Graphify Update
 **Docker Fix Details**: 
 - Problem: ChromaDB 0.4.x wheels built against NumPy 1.24.x ABI; Python 3.13+ ships NumPy 2.x → ABI mismatch
 - Solution: Docker with Python 3.11, NumPy 1.24.4, ChromaDB 0.4.22
-- Files: `E:/_Dev_Tools/mempalace/Dockerfile`, `E:/_Dev_Tools/mempalace/docker-compose.yml`
+- Files: `/home/hermes/mempalace/Dockerfile`, `/home/hermes/mempalace/docker-compose.yml`
 
 ### Graphify (Knowledge Graph)
 - **Binary**: `C:/Users/shrey/AppData/Local/Programs/Python/Python314/Scripts/graphify`
@@ -76,7 +76,7 @@ Persistence: Obsidian Vault + MemPalace + Graphify Update
   ```
 
 ### Obsidian Vault (Structured Memory)
-- **Path**: `E:/_Knowledge/ObsidianVault`
+- **Path**: `/vault`
 - **Structure**:
   ```
   01 - LITERATURE/      # Book notes, articles
@@ -104,7 +104,7 @@ Persistence: Obsidian Vault + MemPalace + Graphify Update
 | `graphify` | `query`, `path`, `explain`, `update`, `god_nodes` | Graph traversal |
 
 ### Telegram Bot
-- **File**: `E:/_Dev_Tools/jarvis/telegram/bot.py`
+- **File**: `/home/hermes/jarvis/telegram/bot.py`
 - **Commands**: `/brief`, `/graph`, `/path`, `/explain`, `/status`, `/run`, `/mem`, `/note`, `/help`
 - **Auth**: Single user ID from `JARVIS_TELEGRAM_USER_ID`
 
@@ -128,7 +128,7 @@ Persistence: Obsidian Vault + MemPalace + Graphify Update
 ## Key Files Created
 
 ```
-E:/_Dev_Tools/jarvis/
+/home/hermes/jarvis/
 ├── ARCHITECTURE.md              # Full system spec
 ├── launch_complete.py           # One-command startup
 ├── mcp_config.json              # MCP server registry
@@ -144,12 +144,12 @@ E:/_Dev_Tools/jarvis/
 ├── cron/jarvis_crons.md         # 6 cron definitions
 └── launch.py                    # Simple launcher
 
-E:/_Dev_Tools/mempalace/
+/home/hermes/mempalace/
 ├── docker-compose.yml           # ChromaDB + MemPalace
 ├── Dockerfile                   # Python 3.11, pinned deps
 └── pyproject.toml               # numpy==1.24.4, chromadb==0.4.22
 
-E:/_Knowledge/ObsidianVault/
+/vault/
 ├── AGENTS.md                    # Jarvis system prompt
 ├── wiki/entities/               # Entities (Annadurai, Periyar, etc.)
 ├── wiki/concepts/               # Concepts (Justice Party, DK, etc.)
@@ -163,11 +163,11 @@ E:/_Knowledge/ObsidianVault/
 
 ```bash
 # 1. Configure Telegram (one-time)
-cp E:/_Dev_Tools/jarvis/.env.template E:/_Dev_Tools/jarvis/.env
+cp /home/hermes/jarvis/.env.template /home/hermes/jarvis/.env
 # Edit .env with BOT_TOKEN and USER_ID from @BotFather / @userinfobot
 
 # 2. Start everything
-python E:/_Dev_Tools/jarvis/launch_complete.py
+python /home/hermes/jarvis/launch_complete.py
 ```
 
 **What starts:**
@@ -223,21 +223,21 @@ python E:/_Dev_Tools/jarvis/launch_complete.py
 
 | Purpose | Path |
 |---------|------|
-| Architecture spec | `E:/_Dev_Tools/jarvis/ARCHITECTURE.md` |
-| Launch script | `E:/_Dev_Tools/jarvis/launch_complete.py` |
-| MCP config | `E:/_Dev_Tools/jarvis/mcp_config.json` |
-| Telegram bot | `E:/_Dev_Tools/jarvis/telegram/bot.py` |
-| Dashboard | `E:/_Dev_Tools/jarvis/dashboard/server.py` |
-| Dashboard UI | `E:/_Dev_Tools/jarvis/dashboard/templates/dashboard.html` |
-| Cron jobs | `E:/_Dev_Tools/jarvis/cron/jarvis_crons.md` |
-| Launch script | `E:/_Dev_Tools/jarvis/launch.py` |
-| MCP Terminal | `E:/_Dev_Tools/jarvis/mcp/terminal/server.py` |
-| MCP Obsidian | `E:/_Dev_Tools/jarvis/mcp/obsidian/server.py` |
-| MCP Graphify | `E:/_Dev_Tools/jarvis/mcp/graphify/server.py` |
-| MemPalace Docker | `E:/_Dev_Tools/mempalace/docker-compose.yml` |
-| MemPalace Dockerfile | `E:/_Dev_Tools/mempalace/Dockerfile` |
-| Vault AGENTS.md | `E:/_Knowledge/ObsidianVault/AGENTS.md` |
-| Graph output | `E:/_Knowledge/ObsidianVault/graphify-out/` |
+| Architecture spec | `/home/hermes/jarvis/ARCHITECTURE.md` |
+| Launch script | `/home/hermes/jarvis/launch_complete.py` |
+| MCP config | `/home/hermes/jarvis/mcp_config.json` |
+| Telegram bot | `/home/hermes/jarvis/telegram/bot.py` |
+| Dashboard | `/home/hermes/jarvis/dashboard/server.py` |
+| Dashboard UI | `/home/hermes/jarvis/dashboard/templates/dashboard.html` |
+| Cron jobs | `/home/hermes/jarvis/cron/jarvis_crons.md` |
+| Launch script | `/home/hermes/jarvis/launch.py` |
+| MCP Terminal | `/home/hermes/jarvis/mcp/terminal/server.py` |
+| MCP Obsidian | `/home/hermes/jarvis/mcp/obsidian/server.py` |
+| MCP Graphify | `/home/hermes/jarvis/mcp/graphify/server.py` |
+| MemPalace Docker | `/home/hermes/mempalace/docker-compose.yml` |
+| MemPalace Dockerfile | `/home/hermes/mempalace/Dockerfile` |
+| Vault AGENTS.md | `/vault/AGENTS.md` |
+| Graph output | `/vault/graphify-out/` |
 
 ---
 
