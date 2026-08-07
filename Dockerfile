@@ -106,14 +106,9 @@ done
 SHEOF
 RUN chmod +x /home/hermes/sync_vault.sh
 
-# Create startup script:
-# 1. Write .env
-# 2. Start health server (background)
-# 3. Start vault sync (background)
-# 4. Clone vault (BLOCKING - must complete before gateway)
-# 5. Verify vault has files
-# 6. Launch gateway
-RUN printf '#!/bin/sh
+# Create startup script using heredoc (avoids printf quoting issues)
+RUN cat > /home/hermes/start.sh << 'STARTEOF'
+#!/bin/sh
 echo "[start.sh] $(date) - HERMES BOT STARTING"
 set +e
 mkdir -p ~/.hermes
@@ -188,12 +183,18 @@ done
 # Set webhook via Telegram API (using token from .env)
 echo "[start.sh] Setting webhook..."
 WEBHOOK_URL="https://hermes-bot.victoriousdesert-40e70367.koreacentral.azurecontainerapps.io/webhooks/telegram"
-curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook"   -d "url=${WEBHOOK_URL}"   -d "secret_token=hermes-webhook-secret-2026-08-06"   -d "drop_pending_updates=true"   -d "allowed_updates=["message","edited_message"]"   | tee /tmp/webhook_set.log
+curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook" \
+  -d "url=${WEBHOOK_URL}" \
+  -d "secret_token=hermes-webhook-secret-2026-08-06" \
+  -d "drop_pending_updates=true" \
+  -d "allowed_updates=["message","edited_message"]" \
+  | tee /tmp/webhook_set.log
 echo "[start.sh] Webhook set result: $(cat /tmp/webhook_set.log)"
 
 # Wait for gateway (this keeps the container alive)
 wait $GATEWAY_PID
-' > /home/hermes/start.sh && chmod +x /home/hermes/start.sh && chmod +x /home/hermes/start.sh
+STARTEOF
+RUN chmod +x /home/hermes/start.sh
 
 # Expose ports
 EXPOSE 8000
