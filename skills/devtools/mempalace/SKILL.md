@@ -60,7 +60,7 @@ When running `mempalace mine` for the first time on a large vault, you may encou
 ## Pre-repair Backup Pattern (Lesson)
 
 When user asks to "repair" a tool that may have irreplaceable state:
-1. First copy `entities.json`, config files, and any user data files to a backup directory like `E:/.mempalace-pre-repair-backup/`.
+1. First copy `entities.json`, config files, and any user data files to a backup directory like `/home/hermes/.mempalace-pre-repair-backup/`.
 2. Run the repair command.
 3. Verify by `diff` against the backup that nothing usable was touched.
 
@@ -71,7 +71,7 @@ This protects against repair actions that look harmless but overwrite working st
 - Generic recipe:
   ```python
   from pathlib import Path
-  backup = Path(f"E:/.{tool_name}-pre-repair-backup")
+  backup = Path(f"/home/hermes/.{tool_name}-pre-repair-backup")
   backup.mkdir(exist_ok=True)
   # Copy all "state" files (config, data, generated history)
   for src in state_files:
