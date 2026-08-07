@@ -6,7 +6,7 @@
 **Active setup (2026-07-20, verified 2026-07-21):**
 - Script: `C:/Users/shrey/AppData/Local/hermes/scripts/cjp-check.py`
 - Cron: `91cbd511877c`, every 15 min, `deliver='local'`
-- Vault output: `E:/_Knowledge/ObsidianVault/04 - DAILY/CJP-LIVE-UPDATES.md`
+- Vault output: `/vault/04 - DAILY/CJP-LIVE-UPDATES.md`
 - User trigger phrase: "CJP update" or "now?" → run script manually, report in chat
 
 ## Pattern
