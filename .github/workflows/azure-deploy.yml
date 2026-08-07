@@ -92,6 +92,7 @@ jobs:
               --ingress external \
               --min-replicas 1 \
               --max-replicas 1 \
+              --ingress AdditionalPortMappings port=8080 targetPort=8080 \
               --registry-server "$ACR" \
               --registry-username "${{ secrets.ACR_USERNAME }}" \
               --registry-password "${{ secrets.ACR_PASSWORD }}" \
@@ -121,7 +122,16 @@ jobs:
               STATUS=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.runningStatus" -o tsv 2>/dev/null || echo "Unknown")
               echo "Status: $STATUS"
               if [ "$STATUS" = "Running" ]; then
-                echo "Container is running!"
+                echo "Container is running! Waiting for gateway health..."
+                # Wait for health endpoint to respond
+                for j in {1..30}; do
+                  if curl -sf "https://${{ env.CONTAINER_APP_NAME }}.koreacentral.azurecontainerapps.io/health" > /dev/null 2>&1; then
+                    echo "Health endpoint responding!"
+                    break
+                  fi
+                  echo "Waiting for health... ($j/30)"
+                  sleep 3
+                done
                 break
               fi
               echo "Waiting... ($i/60)"
