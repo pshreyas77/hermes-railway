@@ -33,7 +33,7 @@ doc.close()
 ## Vault PDF Locations
 
 ```
-E:/_Knowledge/ObsidianVault/BOOKS/pdfs/
+/vault/BOOKS/pdfs/
 ├── ambedkar-riddles-in-hinduism.pdf        (148 pages)
 ├── bhattacharya-studies-on-carvaka-lokayata.pdf  (253 pages)
 ├── periyar-collected-works.pdf             (527 pages)
@@ -101,7 +101,7 @@ grading: strong-evidence
 ### Step 3: Copy PDF to vault
 ```bash
 cp "C:/Users/shrey/Downloads/Original filename (with source tags).pdf" \
-   "E:/_Knowledge/ObsidianVault/BOOKS/pdfs/short-clean-name.pdf"
+   "/vault/BOOKS/pdfs/short-clean-name.pdf"
 ```
 Strip source tags like `(z-library.sk, 1lib.sk, z-lib.sk)` from filenames.
 
@@ -124,7 +124,7 @@ Strip source tags like `(z-library.sk, 1lib.sk, z-lib.sk)` from filenames.
 ```python
 # Always use raw strings or forward slashes — backslashes escape
 # These work:
-pymupdf.open('E:/_Knowledge/ObsidianVault/BOOKS/pdfs/file.pdf')
+pymupdf.open('/vault/BOOKS/pdfs/file.pdf')
 pymupdf.open(r'E:\_Knowledge\ObsidianVault\BOOKS\pdfs\file.pdf')
 
 # This FAILS:
