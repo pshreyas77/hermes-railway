@@ -74,11 +74,16 @@ OBSIDIAN_VAULT_PATH=/vault
 EOF2
 echo "[start.sh] .env written"
 
-# Start vault sync in background (runs every hour)
-echo "[start.sh] Starting vault sync daemon..."
-/home/hermes/sync_vault.sh > /tmp/sync.log 2>&1 &
-SYNC_PID=$!
-echo "[start.sh] Vault sync PID: $SYNC_PID"
+# Remove stale git lock file if present (prevents clone/pull failures)
+echo "[start.sh] Removing stale git lock file..."
+rm -f /vault/.git/index.lock
+
+# NOTE: Disabled hourly sync daemon to prevent git lock conflicts with startup
+# If you need periodic sync, consider using a separate mechanism that doesn't conflict
+# echo "[start.sh] Starting vault sync daemon..."
+# /home/hermes/sync_vault.sh > /tmp/sync.log 2>&1 &
+# SYNC_PID=$!
+# echo "[start.sh] Vault sync PID: $SYNC_PID"
 
 # Clone vault (BLOCKING - must complete before gateway)
 echo "[start.sh] Cloning Obsidian vault..."
