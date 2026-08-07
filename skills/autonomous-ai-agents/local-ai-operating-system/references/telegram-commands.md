@@ -5,7 +5,7 @@
 # 1. Create bot with @BotFather
 # 2. Get BOT_TOKEN
 # 3. Get your USER_ID from @userinfobot
-# 4. Add to E:/_Dev_Tools/jarvis/.env:
+# 4. Add to /home/hermes/jarvis/.env:
 JARVIS_TELEGRAM_BOT_TOKEN=your_token_here
 JARVIS_TELEGRAM_USER_ID=123456789
 ```
@@ -58,7 +58,7 @@ JARVIS_TELEGRAM_USER_ID=123456789
 ```
 ┌─────────────────────────────────────┐
 │ 🤖 Jarvis Online                    │
-│ Vault: E:/_Knowledge/ObsidianVault  │
+│ Vault: /vault  │
 │ Graph: 50k nodes │ 97k edges        │
 ├─────────────────────────────────────┤
 │ 📋 Daily Brief    📊 Status         │
@@ -101,7 +101,7 @@ async def check_user(update):
 
 ```bash
 # Development
-python E:/_Dev_Tools/jarvis/telegram/bot.py
+python /home/hermes/jarvis/telegram/bot.py
 
 # Production (systemd)
 # /etc/systemd/system/jarvis-telegram.service
@@ -112,8 +112,8 @@ After=network.target
 [Service]
 Type=simple
 User=shrey
-WorkingDirectory=E:/_Dev_Tools/jarvis/telegram
-EnvironmentFile=E:/_Dev_Tools/jarvis/.env
+WorkingDirectory=/home/hermes/jarvis/telegram
+EnvironmentFile=/home/hermes/jarvis/.env
 ExecStart=python bot.py
 Restart=always
 RestartSec=10
@@ -150,12 +150,12 @@ async def error_handler(update, context):
 python -c "
 import subprocess
 result = subprocess.run(['graphify', 'query', 'Justice Party', '--budget', '500'], 
-                       cwd='E:/_Knowledge/ObsidianVault', capture_output=True, text=True)
+                       cwd='/vault', capture_output=True, text=True)
 print(result.stdout[:500])
 "
 
 # Test telegram bot locally
-python E:/_Dev_Tools/jarvis/telegram/bot.py
+python /home/hermes/jarvis/telegram/bot.py
 # In Telegram: /start, /help, /graph "test"
 ```
 
