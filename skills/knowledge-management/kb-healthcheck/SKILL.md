@@ -118,7 +118,7 @@ Outputs to: `05 - OUTPUTS/reports/healthcheck-YYYY-MM-DD.md`
 ## Vault Configuration (CORRECTED — 2026-07-13)
 
 ```
-E:/_Knowledge/ObsidianVault/
+/vault/
 ├── 0-raw/                      ← capture sources
 ├── 02 - AREAS/                 ← 1,194 wiki pages by domain (primary healthcheck target)
 ├── 02 - PERMANENT/             ← canonical definitions (concepts/, people/)
