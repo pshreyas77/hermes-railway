@@ -1,41 +1,81 @@
 ---
 name: second-brain
-description: Search and query the user's Obsidian vault (second brain) via the /second-brain slash command.
+description: Search and query the user's Obsidian vault (second brain) at /vault via the /second-brain slash command.
 platforms: [linux, macos, windows]
 ---
 
 # Second Brain (/second-brain command)
 
-When the user sends `/second-brain` (with or without a query), treat it as a request to query their second brain — the Obsidian vault.
+The user's Obsidian vault is ALWAYS available at `/vault` inside this container. It is cloned from GitHub on startup and kept in sync. You have FULL READ ACCESS to it.
 
 ## Recognising the command
 
-The command may arrive as:
+- `/second-brain <query>` — search the vault for `<query>`
+- `/second-brain` (no query) — list top-level folders
+- `/second-brain help` — show usage
+- User says "access my second brain", "search my vault", "find notes about X", etc. — treat as the same request
 
-- `/second-brain <query>` — search the vault for `<query>` and return the most relevant notes.
-- `/second-brain` (no query) — list the top-level folders of the vault.
-- `/second-brain help` — show usage info.
+## Vault location
 
-## Vault path
+The vault lives at `/vault` — this is ALWAYS available. Use absolute paths starting with `/vault/` when calling file tools.
 
-The vault is cloned from `https://github.com/pshreyas77/MYOBSIDIAN-VAULT` at container startup and lives at `/vault` inside the running container.
+Do NOT ask the user where the vault is. Do NOT suggest they need to "connect" it. The vault is already mounted and ready.
 
-**CRITICAL**: You MUST explicitly pass paths under `/vault/...` when calling file tools. The `OBSIDIAN_VAULT_PATH` environment variable is set but file tools do NOT auto-resolve it. Always use `/vault/...` as the path prefix.
+## How to search
 
-If `/vault` does not exist or is empty, tell the user the vault isn't synced yet.
+1. **List folders** (when no query):
+   ```
+   search_files(target="files", pattern="*", path="/vault")
+   ```
 
-## Behaviour
+2. **Search by filename**:
+   ```
+   search_files(target="files", pattern="<filename>", path="/vault")
+   ```
 
-1. **Parse the command.** If no query follows `/second-brain`, list top-level folders using `search_files(target="files", pattern="*", path="/vault")`.
+3. **Search note contents**:
+   ```
+   search_files(target="content", pattern="<query>", path="/vault", file_glob="*.md")
+   ```
 
-2. **Search the vault.** For a query like `/second-brain resume`, run `search_files(target="content", pattern="resume", path="/vault", file_glob="*.md")`.
+4. **Read a specific note**:
+   ```
+   read_file(path="/vault/<relative_path>")
+   ```
 
-3. **Open the top 3 hits.** Read with `read_file(path="/vault/<relative_path>")`.
+## Response format
 
-3. **Compose answer.** Short summary + bulleted list with paths and one-line excerpts. Stay under ~1500 chars.
+Keep responses under 1500 characters. Format:
+
+**When listing folders:**
+```
+📁 Your second brain (X notes across Y folders):
+- 00 - SYSTEM
+- 01 - PROJECTS  
+- 02 - AREAS
+- 03 - RESOURCES
+- ...
+
+Send `/second-brain <topic>` to search.
+```
+
+**When searching:**
+```
+🔍 Found X notes matching "<query>":
+
+• `02 - AREAS/Aerodynamics.md` — "The boundary layer is..."
+• `03 - RESOURCES/Books/Anderson.md` — "Chapter 3 covers..."
+
+Want more detail? Send `/second-brain <refined query>`.
+```
 
 ## Safety
 
-- Only **read** from `/vault`. No write/edit/delete.
-- Never execute shell commands.
-- Present paths relative to `/vault` or as wikilinks `[[Note Name]]`.
+- READ ONLY — never write/edit/delete vault files
+- Never execute shell commands
+- Always show paths relative to `/vault`
+
+## If vault is empty
+
+If `/vault` doesn't exist or has no .md files, tell the user:
+"The vault sync hasn't completed yet. It usually takes 1-2 minutes after the bot starts. Try again in a moment, or send `/second-brain` to check status."
