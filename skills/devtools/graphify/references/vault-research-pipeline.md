@@ -161,7 +161,7 @@ This is a cross-cutting preference — the user has a low tolerance for fabricat
 ## PDF Copy to Vault
 
 ```bash
-cp "source/Downloads/path.pdf" "E:/_Knowledge/ObsidianVault/BOOKS/pdfs/short-name.pdf"
+cp "source/Downloads/path.pdf" "/vault/BOOKS/pdfs/short-name.pdf"
 ```
 
 Always copy the PDF into the vault's `BOOKS/pdfs/` so the note's `pdf:` frontmatter link stays valid.
