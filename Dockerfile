@@ -21,67 +21,10 @@ RUN mkdir -p ~/.hermes
 COPY --chown=hermes:hermes config.yaml ~/.hermes/config.yaml
 COPY --chown=hermes:hermes skills ~/.hermes/skills
 
-# Create health check server
-RUN cat > /home/hermes/health_server.py << 'PYEOF'
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import os, json, time, threading
-
-START_TIME = time.time()
-
-class HealthHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == '/health':
-            vault_info = self.check_vault()
-            response = {
-                'status': 'ok',
-                'uptime_seconds': int(time.time() - START_TIME),
-                'vault': vault_info,
-                'gateway_port': 8000
-            }
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps(response, indent=2).encode())
-        elif self.path == '/vault-status':
-            vault_info = self.check_vault()
-            self.send_response(200 if vault_info['exists'] else 503)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps(vault_info, indent=2).encode())
-        else:
-            self.send_response(404)
-            self.end_headers()
-    
-    def check_vault(self):
-        if not os.path.exists('/vault'):
-            return {'exists': False, 'markdown_files': 0, 'error': '/vault directory does not exist'}
-        md_files = []
-        for root, dirs, files in os.walk('/vault'):
-            for f in files:
-                if f.endswith('.md'):
-                    md_files.append(os.path.join(root, f))
-        return {
-            'exists': True,
-            'markdown_files': len(md_files),
-            'sample_files': md_files[:5]
-        }
-    
-    def log_message(self, format, *args):
-        pass  # Suppress default logs
-
-def run_server():
-    server = HTTPServer(('0.0.0.0', 8080), HealthHandler)
-    print('[health-server] Listening on port 8080')
-    server.serve_forever()
-
-if __name__ == '__main__':
-    run_server()
-PYEOF
-
 # Create vault sync script
 RUN cat > /home/hermes/sync_vault.sh << 'SHEOF'
 #!/bin/sh
-# Sync vault from GitHub - runs every hour via cron
+# Sync vault from GitHub - runs every hour in background
 while true; do
     if [ -d /vault/.git ]; then
         cd /vault
@@ -106,7 +49,7 @@ done
 SHEOF
 RUN chmod +x /home/hermes/sync_vault.sh
 
-# Create startup script using heredoc (avoids printf quoting issues)
+# Create startup script
 RUN cat > /home/hermes/start.sh << 'STARTEOF'
 #!/bin/sh
 echo "[start.sh] $(date) - HERMES BOT STARTING"
@@ -121,12 +64,6 @@ GATEWAY_ALLOW_ALL_USERS=${GATEWAY_ALLOW_ALL_USERS}
 OBSIDIAN_VAULT_PATH=/vault
 EOF2
 echo "[start.sh] .env written"
-
-# Start health server in background
-echo "[start.sh] Starting health server on port 8080..."
-python3 /home/hermes/health_server.py > /tmp/health.log 2>&1 &
-HEALTH_PID=$!
-echo "[start.sh] Health server PID: $HEALTH_PID"
 
 # Start vault sync in background (runs every hour)
 echo "[start.sh] Starting vault sync daemon..."
@@ -170,11 +107,12 @@ hermes gateway run --no-supervise > /tmp/gateway.log 2>&1 &
 GATEWAY_PID=$!
 echo "[start.sh] Gateway PID: $GATEWAY_PID"
 
-# Wait for gateway to be ready (poll the local health endpoint)
+# Wait for gateway to be ready (poll the local webhook endpoint on 8000)
 echo "[start.sh] Waiting for gateway to be ready..."
 for i in {1..30}; do
-  if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
-    echo "[start.sh] Gateway is ready!"
+  # Try to reach the gateway on 8000 - use the webhook path or root
+  if curl -sf http://localhost:8000/webhooks/telegram > /dev/null 2>&1; then
+    echo "[start.sh] Gateway is ready (webhook endpoint responding)!"
     break
   fi
   sleep 2
@@ -196,9 +134,8 @@ wait $GATEWAY_PID
 STARTEOF
 RUN chmod +x /home/hermes/start.sh
 
-# Expose ports
+# Expose only port 8000
 EXPOSE 8000
-EXPOSE 8080
 
 # Environment variables
 ENV HERMES_GATEWAY_HOST=0.0.0.0
