@@ -212,7 +212,7 @@ ai-first: true
 | **Picking a side on contested cultural origins when both lack hard evidence** | **Mirror the established pattern in `references/vault-conventions.md` (Tilak / IVC linga / 40% Rigveda claim / Nuzi horse). All four are: confident assertion built on absence of proof. For origin questions (cultural, ethnic, civilizational), state the gap explicitly — don't nudge to either side.** |
 | **Writing to the wrong drive** | **If the user has a designated vault path (e.g., `E:\_Knowledge\ObsidianVault`), all writes go there. Never spill to `$HOME` or `C:` drive defaults. Resolve the vault path first via `terminal` or `OBSIDIAN_VAULT_PATH`-derived logic, then stick to that resolved absolute path for every `write_file`/`read_file`/`patch`/`search_files` call.** |
 | **Skipping "For future Claude" preamble** | **This vault treats notes as agent-routing surfaces. Every new note needs a one-paragraph `## For future Claude` block immediately after the title — context paragraph, not abstract. This is the first thing future-Claude reads when navigating the vault.** |
-| **`search_files` path failures on Windows vault (E:/ drive)** | **`search_files` with `path=E:/_Knowledge/ObsidianVault` fails with `rg: /e/_Knowledge/...: IO error ... (os error 3)`; native Windows path `C:\Users\shrey\_Knowledge\ObsidianVault` returns `Path not found`. The MSYS/git-bash ripgrep underlay doesn't translate `/e/` correctly and doesn't expand the native Windows path. After one IO error, switch to `terminal` + `cd "E:/_Knowledge/ObsidianVault" && grep -rli ...` from inside the vault. Quote the path because of spaces. Then `read_file` the hits with the E:/ path (which works fine). Don't retry `search_files` more than once. Don't pipe `find ... | xargs ls -la` over paths with spaces — use `find ... -print0 | xargs -0 ls -la` or call `ls -la` directly on known paths. Verified 2026-07-30 on daily-briefing cron.** |
+| **`search_files` path failures on Windows vault (/home/hermes/ drive)** | **`search_files` with `path=/vault` fails with `rg: /e/_Knowledge/...: IO error ... (os error 3)`; native Windows path `C:\Users\shrey\_Knowledge\ObsidianVault` returns `Path not found`. The MSYS/git-bash ripgrep underlay doesn't translate `/e/` correctly and doesn't expand the native Windows path. After one IO error, switch to `terminal` + `cd "/vault" && grep -rli ...` from inside the vault. Quote the path because of spaces. Then `read_file` the hits with the /home/hermes/ path (which works fine). Don't retry `search_files` more than once. Don't pipe `find ... | xargs ls -la` over paths with spaces — use `find ... -print0 | xargs -0 ls -la` or call `ls -la` directly on known paths. Verified 2026-07-30 on daily-briefing cron.** |
 | **BOOKS/ folder unstructured (PDFs + notes mixed, source tags in filenames, no cross-ref)** | **Restructure into: `BOOKS/notes/` (MD notes), `BOOKS/pdfs/` (cleanly-named PDFs), `BOOKS/metadata/` (pdfs-index.md + source-manifest.md). Strip source tags like `(z-library.sk...)` from filenames; move to `source-manifest.md`. Create/update `Books Library.md` as master catalog with `[PDF ✓]` / `📝 Note only` / `📝 Note created` column. Update `Books Dashboard.md` Dataview to query `FROM "BOOKS/notes"`. Add Book Template to `.obsidian/templates/`. Scaffold notes for priority PDFs immediately after restructure.** |
 
 ---
@@ -333,7 +333,7 @@ If the vault is git-backed (most Karpathy-pattern vaults are), set up unattended
 
 1. **Anchor on a known-old file's mtime to find recent notes:**
    ```
-   cd "E:/_Knowledge/ObsidianVault" && find . -name "*.md" -newer "04 - DAILY/2026-07-20.md" \
+   cd "/vault" && find . -name "*.md" -newer "04 - DAILY/2026-07-20.md" \
      -not -path "./graphify-out/*" -not -path "./.obsidian/*" -not -path "./.smart-env/*" \
      -not -path "./.git/*" -not -path "./3-threads/*" -not -path "./BRIEFINGS/*" -not -path "./_COMMUNITY*"
    ```
@@ -341,7 +341,7 @@ If the vault is git-backed (most Karpathy-pattern vaults are), set up unattended
 
 2. **Filter to last 24h via second pass with `-newermt`:**
    ```
-   cd "E:/_Knowledge/ObsidianVault" && find . -name "*.md" -newermt "2026-07-29 00:00:00" \
+   cd "/vault" && find . -name "*.md" -newermt "2026-07-29 00:00:00" \
      -not -path "./graphify-out/*" -not -path "./.obsidian/*" -not -path "./.smart-env/*" \
      -not -path "./.git/*" -not -path "./3-threads/*" -not -path "./BRIEFINGS/*" -not -path "./_COMMUNITY*"
    ```
@@ -358,7 +358,7 @@ If the vault is git-backed (most Karpathy-pattern vaults are), set up unattended
 
 6. **Topic-keyword sweep via `grep -rli`:** for each briefing topic (Justice Party, Dravidian movement, JK elections, language families) run:
    ```
-   cd "E:/_Knowledge/ObsidianVault" && grep -rli "justice party" --include="*.md" . | grep -v graphify-out | head -10
+   cd "/vault" && grep -rli "justice party" --include="*.md" . | grep -v graphify-out | head -10
    ```
    Then `read_file` the top 2-3 hits per topic for cross-reference content.
 
@@ -389,7 +389,7 @@ If the vault is git-backed (most Karpathy-pattern vaults are), set up unattended
 
 **How to Run on This Vault**:
 ```bash
-cd "E:/_Knowledge/ObsidianVault"
+cd "/vault"
 # Parse and build graph (deterministic scan + LLM analysis)
 python C:/Users/shrey/.hermes/skills/understand-anything/understand-knowledge/parse-knowledge-base.py .
 python C:/Users/shrey/.hermes/skills/understand-anything/understand-knowledge/merge-knowledge-graph.py .
