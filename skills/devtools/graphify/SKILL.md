@@ -10,7 +10,7 @@ Turn any folder of files into a navigable knowledge graph with community detecti
 
 **User rule: ALL work on E: drive. Source is at `/home/hermes/graphify/` — never use C: for installs.**
 
-**Windows cache redirect:** All tool caches redirected to E: — `UV_CACHE_DIR=E:/.uv-cache`, `PIP_CACHE_DIR=E:/.pip-cache`, `TMP=E:/.tmp`, `TEMP=E:/.tmp`. Set in `~/.bashrc` (auto-loaded via `auto_source_bashrc: true`) and via Windows `setx` for system-wide persistence. See `/home/hermes/graphify/references/cache-redirect-setup.md` for the full setup (created 2026-07-20).
+**Windows cache redirect:** All tool caches redirected to E: — `UV_CACHE_DIR=/home/hermes/.uv-cache`, `PIP_CACHE_DIR=/home/hermes/.pip-cache`, `TMP=/home/hermes/.tmp`, `TEMP=/home/hermes/.tmp`. Set in `~/.bashrc` (auto-loaded via `auto_source_bashrc: true`) and via Windows `setx` for system-wide persistence. See `/home/hermes/graphify/references/cache-redirect-setup.md` for the full setup (created 2026-07-20).
 
 ## Vault-specific context
 
@@ -22,7 +22,7 @@ Turn any folder of files into a navigable knowledge graph with community detecti
 - `references/vault-research-pipeline.md` — PDF reading (pymupdf on Python 3.14), research note template, evidence grading, linking pattern
 - `references/cjp-live-monitor.md` — cron-based live news monitor: Python scraping script → vault file. JSON-LD extraction (NOT h2/h3 regex) for Hindustan Times. Scroll.in as best live-updating source. User said NO Telegram delivery — use `deliver='local'`.
 - `references/obsidian-canvas-generation.md` — programmatic `.canvas` building, slug cover matching, case-insensitive genre classification
-- `references/mempalace-venv.md` — bare `mempalace` on PATH uses Python 3.14 and crashes on numpy ABI; use `cd E:/_Dev_Tools/mempalace && python -m mempalace …`
+- `references/mempalace-venv.md` — bare `mempalace` on PATH uses Python 3.14 and crashes on numpy ABI; use `cd /home/hermes/mempalace && python -m mempalace …`
 | CLI binary | `C:/Users/shrey/AppData/Local/Programs/Python/Python314/Scripts/graphify` |
 | Source | `/home/hermes/graphify/` |
 
@@ -33,7 +33,7 @@ Turn any folder of files into a navigable knowledge graph with community detecti
 
 ## Obsidian Vault Integration (Added 2026-07-18)
 
-The vault at `E:/_Knowledge/ObsidianVault` has been indexed with graphify. The graph includes:
+The vault at `/vault` has been indexed with graphify. The graph includes:
 - Markdown notes (wiki, research, daily logs)
 - Code files (Python, TypeScript, etc.)
 - Community detection reveals 3,910 clusters
@@ -41,12 +41,12 @@ The vault at `E:/_Knowledge/ObsidianVault` has been indexed with graphify. The g
 
 **Key vault paths:**
 - Graph output: `/vault/graphify-out/graph.json` + `GRAPH_REPORT.md`
-- Wiki notes: `E:/_Knowledge/ObsidianVault/wiki/`
-- Research: `E:/_Knowledge/ObsidianVault/Research/`
-- Daily logs: `E:/_Knowledge/ObsidianVault/04 - DAILY/`
-- MOCs: `E:/_Knowledge/ObsidianVault/05 - MAPS/`
+- Wiki notes: `/vault/wiki/`
+- Research: `/vault/Research/`
+- Daily logs: `/vault/04 - DAILY/`
+- MOCs: `/vault/05 - MAPS/`
 
-**AGENTS.md rules created:** `E:/_Knowledge/ObsidianVault/AGENTS.md` contains graphify usage rules (read GRAPH_REPORT.md first, prefer graphify query over grep).
+**AGENTS.md rules created:** `/vault/AGENTS.md` contains graphify usage rules (read GRAPH_REPORT.md first, prefer graphify query over grep).
 
 ### What Actually Works for CJP News
 ```python
@@ -139,7 +139,7 @@ else:                                                   return "General"
 
 Always `cd` to the vault before running graphify commands. Do NOT run from `C:\Users\shrey\` — that creates AGENTS.md pollution on C:.
 
-After modifying code files, run `graphify update E:/_Knowledge/ObsidianVault` to keep the graph current.
+After modifying code files, run `graphify update /vault` to keep the graph current.
 
 **Pitfall — `graphify update` is code-only:** the `--update` / `update` subcommand re-extracts **code files only** (AST, no LLM calls). Markdown notes, PDFs, and images are NOT picked up. If the vault had doc/paper/image changes, run a full `/graphify --update` from the assistant, or the graph will silently stay stale on those surfaces. The cron job that runs `graphify update` only refreshes the code slice.
 
@@ -152,7 +152,7 @@ Before answering architecture/codebase questions, read `graphify-out/GRAPH_REPOR
 `execute_code` is blocked for arbitrary Python scripts that write output files (canvas generation, data processing, etc.). When you need to run a multi-step Python script that produces a file:
 
 1. Write the script to `/home/hermes/graphify/<descriptive-name>.py` using `write_file`
-2. Run it via `terminal`: `cd E:/_Dev_Tools/graphify && python <descriptive-name>.py`
+2. Run it via `terminal`: `cd /home/hermes/graphify && python <descriptive-name>.py`
 3. Verify output with targeted `terminal` commands, not execute_code
 
 This pattern was used for:
@@ -216,7 +216,7 @@ The same family of bug also affects `Surprising Connections` and `God Nodes` hea
 
 **Pitfall — never claim the dead-link fix works without re-verifying in code:** the snippet earlier in this skill showed `#community-0---community-0` — but the **actual** Obsidian slug is `#community-0-community-0` (double-dash only appears between title words, not after the number). Always derive slug from heading text in the current file. See script `scripts/fix-community-links.py` for the working implementation.
 
-**Backup before fixing:** copy the file to `E:/.mempalace-pre-repair-backup/GRAPH_REPORT.md.pre-fix-<timestamp>` (mempalace-pre-repair-backup is the user's pre-existing routine backup directory — fine to reuse as a one-off safety net). The script is idempotent, so a botched rewrite on a re-run is rare — but still.
+**Backup before fixing:** copy the file to `/home/hermes/.mempalace-pre-repair-backup/GRAPH_REPORT.md.pre-fix-<timestamp>` (mempalace-pre-repair-backup is the user's pre-existing routine backup directory — fine to reuse as a one-off safety net). The script is idempotent, so a botched rewrite on a re-run is rare — but still.
 
 **Do NOT:** Re-run `graphify cluster-only` thinking it'll fix anything — it regenerates the same dead links. The fix is **post-process the report**, not regenerate the graph.
 
@@ -233,7 +233,7 @@ When a cron job is gated on a tag (e.g. "process every note tagged `content-pipe
 Use `scripts/find-tag.py` (exercises the execute_code workaround pattern above):
 
 ```
-cd E:/_Dev_Tools/graphify && python scripts/find-tag.py E:/_Knowledge/ObsidianVault content-pipeline
+cd /home/hermes/graphify && python scripts/find-tag.py /vault content-pipeline
 ```
 
 It reports two sections:
@@ -250,7 +250,7 @@ Concrete past run (2026-07-20): vault had 8,403 .md files. `content-pipeline` ma
 
 Run pattern when triggered by user request like "check why my community links are broken":
 ```
-python /home/hermes/graphify/scripts/scan-broken-links.py E:/_Knowledge/ObsidianVault
+python /home/hermes/graphify/scripts/scan-broken-links.py /vault
 ```
 
 Important: most "broken" targets in a typical vault are LLM-generated topic tags in `00_Index.md` / `00_Qwen_Index.md`-style auto-generated files. These look like missing notes but were never intended as real notes — they are categorization tags that don't have corresponding pages. Different from `_COMMUNITY_Community N.md` missing files (which is a graphify report-emission bug fixed by the Dead Community Links section above).
@@ -269,7 +269,7 @@ Concrete run (2026-07-20): 4,734 notes, 26,914 wiki-links, 2,202 broken-link tar
 
 1. **Filter the graph to vault-only nodes first.** The vault notes live under paths like `wiki/`, `Research/`, `02 - AREAS/`, `03 - PROJECTS/`, `04 - DAILY/`, `05 - MAPS/`, `06 - OUTPUTS/`, `07 - SYSTEM/`. Everything under `tolaria/`, `ruflo/`, `GitNexus/`, `consciousness-symphony/`, `genericagent/`, `copilot/`, `.smart-env/`, `_keys/`, `node_modules/`, etc. is **embedded code, not user notes**.
 2. **Use `scripts/vault-only-nodes.py --graph graph.json --out graph-vault-only.json`** to materialise a filtered graph (saves a fresh graph.json whose nodes are restricted to vault paths). Then `graphify query --graph graph-vault-only.json` returns topical results.
-3. **Cheaper alternative for one-off queries:** `search_files target=content path=E:/_Knowledge/ObsidianVault file_glob=*.md pattern="<topic-keyword>"` then `read_file` the hits. For cron jobs that aggregate "what's new in the vault", this is faster and skips the noise entirely. Topic keywords here = "CJP", "Justice Party", "Dravidian", "Jammu", "language family", etc. — strings that *only* appear in user-authored vault notes, never in vendor code symbols.
+3. **Cheaper alternative for one-off queries:** `search_files target=content path=/vault file_glob=*.md pattern="<topic-keyword>"` then `read_file` the hits. For cron jobs that aggregate "what's new in the vault", this is faster and skips the noise entirely. Topic keywords here = "CJP", "Justice Party", "Dravidian", "Jammu", "language family", etc. — strings that *only* appear in user-authored vault notes, never in vendor code symbols.
 4. **For `explain "<concept>"`:** if the BUT NOT the exact concept name appears as a code symbol (e.g., a function literally called `justiceParty()` or `dravidian()`), the explain route still hits the noise. Use `read_file` on the corresponding `wiki/concepts/<Concept>.md` directly instead.
 
 **Concrete 2026-07-25 cron run:** A daily-briefing cron asked "what's important in the vault today" and tried `graphify query "<topic>"` 3 times. All 3 returned code-symbol noise. Falling back to `find . -mtime -7 ...` + targeted `read_file` on `Research/India/`, `wiki/concepts/`, `04 - DAILY/`, `05 - MAPS/` produced the actual briefing content in ~6 read_file calls. The script `scripts/vault-only-nodes.py` was created to avoid this on future cron runs.
