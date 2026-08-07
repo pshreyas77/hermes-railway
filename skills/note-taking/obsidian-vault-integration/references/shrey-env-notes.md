@@ -1,23 +1,23 @@
 # Shrey's Environment Notes
 
 ## Vault Path
-- **Vault:** `E:/_Knowledge/ObsidianVault`
+- **Vault:** `/vault`
 - **Set via:** `OBSIDIAN_VAULT_PATH` in `~/.hermes/.env`
 - **Convention:** All installs/clones/builds → E: drive ONLY (never C:)
 
 ## Dev Tools Location
-- **E:/_Dev_Tools/** — graphify, mempalace, openclaude, openresearchclaw, nano, OPENSPEC
-- **E:/_AI_Tools/** — Atomic Chat, LM-Studio, ollama, opencode, openresearchclaw
+- **/home/hermes/** — graphify, mempalace, openclaude, openresearchclaw, nano, OPENSPEC
+- **/home/hermes/_AI_Tools/** — Atomic Chat, LM-Studio, ollama, opencode, openresearchclaw
 
 ## Critical Windows Path Bug
 
 ### search_files (ripgrep) fails silently on paths with spaces
-This vault is at `E:/_Knowledge/` with spaces in folder names (e.g., `02 - AREAS/`).
+This vault is at `/home/hermes/` with spaces in folder names (e.g., `02 - AREAS/`).
 `search_files` with `target: "content"` returns zero results without error.
 
 **Workaround — always use terminal grep:**
 ```bash
-terminal cd "E:/_Knowledge/ObsidianVault" && grep -rl "pattern" . --include="*.md"
+terminal cd "/vault" && grep -rl "pattern" . --include="*.md"
 ```
 
 **file tools (read_file, write_file, patch)** work fine with quoted absolute paths — only `search_files` is broken.
