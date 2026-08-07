@@ -4,7 +4,7 @@ description: Compile raw source material from 0-raw/ into structured wiki/ conce
 version: 1.1.0
 category: knowledge-management
 tags: [obsidian, knowledge-base, compilation, karpathy-method, hermes-agent]
-vault_path: "E:/_Knowledge/ObsidianVault"
+vault_path: "/vault"
 raw_dir: "0-raw"
 concepts_dir: "02 - AREAS"
 entities_dir: "02 - PERMANENT"
@@ -17,7 +17,7 @@ Compiles raw source material from `0-raw/` into structured wiki pages in `wiki/c
 
 ## Prerequisites
 
-- Vault at `E:/_Knowledge/ObsidianVault`
+- Vault at `/vault`
 - Raw source files in `0-raw/` (captured via Obsidian Web Clipper or manual markdown)
 - Existing directories: `wiki/concepts/`, `wiki/entities/`, `wiki/index.md`, `wiki/log.md`
 
@@ -147,7 +147,7 @@ Maintains `.kb-compile-state.json` in vault root:
 ## Vault Configuration (CORRECTED — 2026-07-13)
 
 ```
-E:/_Knowledge/ObsidianVault/
+/vault/
 ├── 0-raw/                      ← capture sources (Night Shift Scout watches here)
 │   └── sources/archived/        ← archived after refinery
 ├── 1-desk/                     ← Night Shift processing queue
@@ -206,7 +206,7 @@ The on-demand path and the autonomous path use the same source/destination folde
 Compiled pages land in `wiki/concepts/` and `wiki/entities/` either way.
 
 **Agentic OS skill path** (for loop integration):
-`E:/_Knowledge/ObsidianVault/agentic-os/loop/skills/kb-compile-skill/SKILL.md`
+`/vault/agentic-os/loop/skills/kb-compile-skill/SKILL.md`
 
 ## Pitfalls
 
