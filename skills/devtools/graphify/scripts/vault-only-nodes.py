@@ -19,12 +19,12 @@ calls return topical content.
 
 USAGE
 -----
-    python E:/_Dev_Tools/graphify/scripts/vault-only-nodes.py \
-        --graph E:/_Knowledge/ObsidianVault/graphify-out/graph.json \
-        --out   E:/_Knowledge/ObsidianVault/graphify-out/graph-vault-only.json
+    python /home/hermes/graphify/scripts/vault-only-nodes.py \
+        --graph /vault/graphify-out/graph.json \
+        --out   /vault/graphify-out/graph-vault-only.json
 
 Optional flags:
-    --vault-root PATH    override vault root (default: E:/_Knowledge/ObsidianVault)
+    --vault-root PATH    override vault root (default: /vault)
     --keep-prefixes P,P  comma-separated extra path prefixes to KEEP
                          (default: wiki, Research, 02 - AREAS, 03 - PROJECTS,
                           04 - DAILY, 05 - MAPS, 06 - OUTPUTS, 07 - SYSTEM,
@@ -234,8 +234,8 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Filter a graph.json to vault-author-note nodes only.")
     parser.add_argument("--graph", required=True, help="path to graph.json (input)")
     parser.add_argument("--out", required=True, help="path to write filtered graph.json")
-    parser.add_argument("--vault-root", default="E:/_Knowledge/ObsidianVault",
-                        help="vault root for path-relativization (default: E:/_Knowledge/ObsidianVault)")
+    parser.add_argument("--vault-root", default="/vault",
+                        help="vault root for path-relativization (default: /vault)")
     parser.add_argument("--keep-prefixes", default=None, help="comma-separated overrides for keep-list")
     parser.add_argument("--drop-prefixes", default=None, help="comma-separated overrides for drop-list")
     args = parser.parse_args(argv)
