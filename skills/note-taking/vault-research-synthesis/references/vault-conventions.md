@@ -1,4 +1,4 @@
-# Vault Conventions — Shreyas's Second Brain (E:/_Knowledge/ObsidianVault)
+# Vault Conventions — Shreyas's Second Brain (/vault)
 
 *Discovered during 2026-07-08 gap analysis session. Update per vault.*
 
@@ -8,7 +8,7 @@
 
 **All write_file / read_file / patch / search_files operations MUST use:**
 ```
-E:/_Knowledge/ObsidianVault
+/vault
 ```
 
 **Do NOT write to**:
@@ -23,7 +23,7 @@ E:/_Knowledge/ObsidianVault
 ## Folder Structure (PARA + Wiki Hybrid)
 
 ```
-E:/_Knowledge/ObsidianVault/
+/vault/
 ├── 00 - INBOX/                    # Raw captures
 ├── 01 - LITERATURE/               # External source notes (articles, papers)
 ├── 02 - AREAS/                    # Active areas (Philosophy, AI, etc.)
