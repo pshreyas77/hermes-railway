@@ -15,7 +15,7 @@ python -c "
 with open(r'C:\Users\shrey\AppData\Local\hermes\.env', 'w', encoding='utf-8') as f:
     f.write('TELEGRAM_BOT_TOKEN=\"8863778824:AAFo-dFCpYX2_lUv_Ru-WBzOdD0e77z4tps\"\n')
     f.write('TELEGRAM_CHAT_ID=\"8336840601\"\n')
-    f.write('OBSIDIAN_VAULT_PATH=\"E:/_Knowledge/ObsidianVault\"\n')
+    f.write('OBSIDIAN_VAULT_PATH=\"/vault\"\n')
     f.write('TELEGRAM_ALLOWED_USERS=\"8336840601\"\n')
 "
 ```
