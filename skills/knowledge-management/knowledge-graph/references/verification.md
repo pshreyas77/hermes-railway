@@ -9,7 +9,7 @@ python3 - << 'PY'
 import json, re
 from pathlib import Path
 
-f = Path("E:/_Knowledge/ObsidianVault/obsidian_graph.html")
+f = Path("/vault/obsidian_graph.html")
 html = f.read_text(encoding="utf-8")
 size = f.stat().st_size
 
@@ -69,7 +69,7 @@ cmd //c start obsidian "E:\_Knowledge\ObsidianVault\obsidian_graph.html"
 
 Or open the file directly in any browser via:
 ```
-file:///E:/_Knowledge/ObsidianVault/obsidian_graph.html
+file:////vault/obsidian_graph.html
 ```
 
 ## Common Issues
