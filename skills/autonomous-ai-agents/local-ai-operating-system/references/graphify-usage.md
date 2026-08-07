@@ -44,12 +44,12 @@ graphify explain "Suyamariyathai"
 
 ### Update Graph (Incremental - AST Only, No API Cost)
 ```bash
-graphify update E:/_Knowledge/ObsidianVault
+graphify update /vault
 ```
 
 ### Full Rebuild (With Semantic Extraction - Needs MOONSHOT_API_KEY)
 ```bash
-graphify extract E:/_Knowledge/ObsidianVault --mode deep
+graphify extract /vault --mode deep
 ```
 
 ### God Nodes (Top Connected)
