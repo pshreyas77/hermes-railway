@@ -13,7 +13,7 @@
 ## Installation for Hermes
 
 ```bash
-cd E:/_Dev_Tools/Understand-Anything
+cd /home/hermes/Understand-Anything
 bash install.sh hermes
 ```
 
@@ -32,12 +32,12 @@ This adds 10 skills under `understand-anything/` in `~/.hermes/skills/`:
 | `understand-figma` | Figma design analysis |
 | `understand-knowledge` (alias) | Same as understand-knowledge |
 
-## Running on This Vault (E:/_Knowledge/ObsidianVault)
+## Running on This Vault (/vault)
 
 ### Quick Start (CLI)
 
 ```bash
-cd "E:/_Knowledge/ObsidianVault"
+cd "/vault"
 
 # 1. Parse wiki structure (deterministic)
 python "C:/Users/shrey/.hermes/skills/understand-anything/understand-knowledge/parse-knowledge-base.py" .
@@ -124,14 +124,14 @@ hermes chat --skills understand-anything "/understand-onboard"
 
 ## Automation Script
 
-Create `E:/_Dev_Tools/scripts/vault-understand-knowledge.sh`:
+Create `/home/hermes/scripts/vault-understand-knowledge.sh`:
 
 ```bash
 #!/usr/bin/env bash
 # Monthly vault knowledge graph update
 set -e
 
-VAULT="E:/_Knowledge/ObsidianVault"
+VAULT="/vault"
 SKILLS_ROOT="C:/Users/shrey/.hermes/skills/understand-anything"
 
 cd "$VAULT"
