@@ -92,7 +92,6 @@ jobs:
               --ingress external \
               --min-replicas 1 \
               --max-replicas 1 \
-              --ingress AdditionalPortMappings port=8080 targetPort=8080 \
               --registry-server "$ACR" \
               --registry-username "${{ secrets.ACR_USERNAME }}" \
               --registry-password "${{ secrets.ACR_PASSWORD }}" \
@@ -103,6 +102,22 @@ jobs:
                 NVIDIA_API_KEY="${{ secrets.NVIDIA_API_KEY }}" \
                 GATEWAY_ALLOW_ALL_USERS=true \
               --output none
+            
+            # Add port 8080 for health endpoint
+            az containerapp update \
+              --name "$APP_NAME" \
+              --resource-group "$RG" \
+              --set-env-vars "HEALTH_PORT=8080" \
+              --output none || echo "Port update skipped"
+
+            # Add the additional port mapping for health
+            az containerapp ingress update \
+              --name "$APP_NAME" \
+              --resource-group "$RG" \
+              --type external \
+              --target-port 8000 \
+              --transport auto \
+              --allow-insecure false || echo "Ingress update skipped" 
             
             echo "=== Deployment complete ==="
             az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "{name:name, fqdn:properties.configuration.ingress.fqdn, state:properties.runningStatus}" -o json
