@@ -10,7 +10,7 @@ Use this skill AFTER creating a substantive note with the `obsidian` skill. The 
 
 **Trigger:** A new research note, synthesis note, or presentation artifact (HTML slideshow, markdown slides, etc.) was just created. The note exists on disk but is not yet wired into the vault's graph.
 
-**User rule: ALL work on E: drive. Never use C: for tool installs, source code, or project files. Shrey's vault is at `E:/_Knowledge/ObsidianVault`.**
+**User rule: ALL work on E: drive. Never use C: for tool installs, source code, or project files. Shrey's vault is at `/vault` (cloned from GitHub on startup).**
 
 **Factual claims in notes: ALWAYS cross-check against Wikipedia before storing.** The user explicitly requires verification of elections, biographies, institutional affiliations, dates, and numbers before they enter the vault. Claims that were not cross-checked will be challenged. For any time-sensitive claim (elections, current events), verify the current date and check if the event already happened.
 
@@ -127,11 +127,11 @@ kt_match = re.search(r"## Key Takeaways\s*\n(.*?)(?=\n## |$)", body, re.DOTALL)
 ## Troubleshooting
 
 ### `search_files` Returns 0 Results on Windows Vault Paths
-`search_files` with paths like `E:/_Knowledge/ObsidianVault/` containing spaces and special characters
+`search_files` with paths like `/vault/` containing spaces and special characters
 returns zero results even when the string exists in those files. This is a tool limitation on Windows.
 **Workaround:** Use `terminal` with `grep` instead:
 ```bash
-cd "E:/_Knowledge/ObsidianVault" && grep -rl "New Note Title" . --include="*.md" 2>/dev/null
+cd "/vault" && grep -rl "New Note Title" . --include="*.md" 2>/dev/null
 ```
 Use `grep -rl` (recursive, list filenames only) for verification passes. Use `grep -c` (count per file) for quick checks.
 
