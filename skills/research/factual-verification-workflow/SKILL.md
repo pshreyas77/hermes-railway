@@ -61,7 +61,7 @@ When providing lists of people, their qualifications, or specific factual claims
 
   **India-Specific Verification Lessons (from 2026-07-26 and 2026-07-27)**
 
-    **Session 2026-07-26** produced the verified vault note at `E:/_Knowledge/ObsidianVault/Research/India/caste_resource_ownership_by_state.md`.
+    **Session 2026-07-26** produced the verified vault note at `/vault/Research/India/caste_resource_ownership_by_state.md`.
 
     **Session 2026-07-27** (this session): User asked for caste-based economic/resource ownership across Indian states using ONLY live web search with trusted non-godi media (The Wire, Scroll, The Hindu, Article 14, BBC, Reuters). Result: Same accessibility failures as 07-26. Produced report at `C:/Users/shrey/caste_economic_research_final.md` (temp) → to be moved to vault.
 
@@ -103,7 +103,7 @@ When providing lists of people, their qualifications, or specific factual claims
     3. Trusted media via `r.jina.ai/http://URL` for bypassing paywalls/bot-blocks
     4. If live article access fails (expected), pivot to NSSO/SECC/PLFS/RBI anchors + academic citations
     5. Write report with explicit confidence labels to temp file, then move to vault
-    6. **Always save to vault** at `E:/_Knowledge/ObsidianVault/Research/India/<topic>.md`
+    6. **Always save to vault** at `/vault/Research/India/<topic>.md`
 
 ## Verification Checklist
 - [ ] Is the degree title exact?
