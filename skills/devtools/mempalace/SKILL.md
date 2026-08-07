@@ -6,37 +6,37 @@ trigger: /mempalace
 
 # /mempalace
 
-Local-first AI memory — verbatim storage, no summarization. Source at `E:/_Dev_Tools/mempalace/`.
+Local-first AI memory — verbatim storage, no summarization. Source at `/home/hermes/mempalace/`.
 
 ## Vault context
 
 Your vault is already initialized:
 - **Entities**: 15 people, 9 projects detected
-- **Entities file**: `E:/_Knowledge/ObsidianVault/entities.json`
-- **Storage**: ChromaDB at `E:/_Dev_Tools/mempalace/palace/`
+- **Entities file**: `/vault/entities.json`
+- **Storage**: ChromaDB at `/home/hermes/mempalace/palace/`
 
 ## Windows Installation Note (Added 2026-07-18, REPAIRED 2026-07-20)
 
 **Known issue**: MemPalace's `chromadb` dependency pulls `numpy` which has a Python 3.14 vs 3.11 ABI mismatch on Windows when Hermes's venv (Python 3.11 numpy) shadows the uv tool's isolated Python 3.14 environment.
 
-**Solution that works (REPAIRED 2026-07-20)**: Wrap the `mempalace` binary in `E:/_Dev_Tools/mempalace/mp.sh` with these fixed exports:
+**Solution that works (REPAIRED 2026-07-20)**: Wrap the `mempalace` binary in `/home/hermes/mempalace/mp.sh` with these fixed exports:
 ```bash
 #!/bin/bash
 unset PYTHONPATH
 unset PYTHONHOME
-export HF_HOME="E:/.hf-home"
-export HF_HUB_CACHE="E:/.hf-home/hub"
-export TRANSFORMERS_CACHE="E:/.hf-home/transformers"
-export CHROMA_HOME="E:/.chroma-cache"
-export PYTHONUSERBASE="E:/.python-userbase"
-export TMPDIR="E:/.tmp"
-export TEMP="E:/.tmp"
-export TMP="E:/.tmp"
-PY_BIN="/c/Users/shrey/AppData/Local/Programs/Python/Python314/python.exe"
-"$PY_BIN" -m mempalace "$@"
+export HF_HOME="/home/hermes/.hf-home"
+export HF_HUB_CACHE="/home/hermes/.hf-home/hub"
+export TRANSFORMERS_CACHE="/home/hermes/.hf-home/transformers"
+export CHROMA_HOME="/home/hermes/.chroma-cache"
+export PYTHONUSERBASE="/home/hermes/.python-userbase"
+export TMPDIR="/tmp"
+export TEMP="/tmp"
+export TMP="/tmp"
+PY_BIN="python3"
+python3 -m mempalace "$@"
 ```
 
-Invoke as `E:/_Dev_Tools/mempalace/mp.sh status` etc. This pattern:
+Invoke as `/home/hermes/mempalace/mp.sh status` etc. This pattern:
 1. Clears Python path pollution from Hermes venv
 2. Forces E: drive for all caches (no C: pollution — respects user rule)
 3. Avoids `numpy._core._multiarray_umath` import error
@@ -45,7 +45,7 @@ Other (less reliable) workarounds:
 1. **Docker** (sometimes works but pulls 79MB ONNX model on every run): `docker build -t mempalace . && docker run -i --rm -v mempalace-data:/data mempalace`
 2. **Force Python 3.11**: `uv tool install --python 3.11 mempalace` (if 3.11 is available)
 
-The vault at `E:/_Knowledge/ObsidianVault` is already initialized with `entities.json` (15 people, 9 projects). The `mempalace init` step is complete.
+The vault at `/vault` is already initialized with `entities.json` (15 people, 9 projects). The `mempalace init` step is complete.
 
 ## Pitfalls — MemPalace mine warnings to NOT STOP on (2026-07-20 lessons)
 
@@ -55,7 +55,7 @@ When running `mempalace mine` for the first time on a large vault, you may encou
 
 2. **`OSError: [Errno 36] Resource deadlock avoided` from `msvcrt.locking(lf.fileno(), msvcrt.LK_LOCK, 1)`** — Windows-specific issue with byte-locking on the mine lock file. Mine actually proceeded (data is in chroma.sqlite3). Leave the stale `.lock` file alone — system re-acquires on next run. Don't keep retrying.
 
-3. **First-run DB download** — chromadb downloads a 79MB ONNX model (`all-MiniLM-L6-v2`) to first embedding call. Watch for `onnx.tar.gz` progress bar. With `CHROMA_HOME` in your mp.sh wrapper, this stays in `E:/.chroma-cache/` not C:. The 50+MB partial download is preserved between runs.
+3. **First-run DB download** — chromadb downloads a 79MB ONNX model (`all-MiniLM-L6-v2`) to first embedding call. Watch for `onnx.tar.gz` progress bar. With `CHROMA_HOME` in your mp.sh wrapper, this stays in `/home/hermes/.chroma-cache/` not C:. The 50+MB partial download is preserved between runs.
 
 ## Pre-repair Backup Pattern (Lesson)
 
@@ -85,8 +85,8 @@ This protects against repair actions that look harmless but overwrite working st
 ## Key paths
 
 - CLI: `C:/Users/shrey/AppData/Roaming/uv/tools/mempalace/Scripts/mempalace`
-- Source: `E:/_Dev_Tools/mempalace/`
-- Entities: `E:/_Knowledge/ObsidianVault/entities.json`
+- Source: `/home/hermes/mempalace/`
+- Entities: `/vault/entities.json`
 - **Palace data: `C:/Users/shrey/.mempalace/palace/`**  (NOT under the source tree — fixed 2026-07-24)
 
 ## See also
