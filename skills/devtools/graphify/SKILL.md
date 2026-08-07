@@ -8,15 +8,15 @@ trigger: /graphify
 
 Turn any folder of files into a navigable knowledge graph with community detection, an honest audit trail (EXTRACTED/INFERRED/AMBIGUOUS), and three outputs: interactive HTML, GraphRAG-ready JSON, and a plain-language GRAPH_REPORT.md.
 
-**User rule: ALL work on E: drive. Source is at `E:/_Dev_Tools/graphify/` — never use C: for installs.**
+**User rule: ALL work on E: drive. Source is at `/home/hermes/graphify/` — never use C: for installs.**
 
-**Windows cache redirect:** All tool caches redirected to E: — `UV_CACHE_DIR=E:/.uv-cache`, `PIP_CACHE_DIR=E:/.pip-cache`, `TMP=E:/.tmp`, `TEMP=E:/.tmp`. Set in `~/.bashrc` (auto-loaded via `auto_source_bashrc: true`) and via Windows `setx` for system-wide persistence. See `E:/_Dev_Tools/graphify/references/cache-redirect-setup.md` for the full setup (created 2026-07-20).
+**Windows cache redirect:** All tool caches redirected to E: — `UV_CACHE_DIR=E:/.uv-cache`, `PIP_CACHE_DIR=E:/.pip-cache`, `TMP=E:/.tmp`, `TEMP=E:/.tmp`. Set in `~/.bashrc` (auto-loaded via `auto_source_bashrc: true`) and via Windows `setx` for system-wide persistence. See `/home/hermes/graphify/references/cache-redirect-setup.md` for the full setup (created 2026-07-20).
 
 ## Vault-specific context
 
 | | |
 |---|---|
-| Vault graph | `E:/_Knowledge/ObsidianVault/graphify-out/` |
+| Vault graph | `/vault/graphify-out/` |
 | Graph stats | 50,137 nodes, 97,449 edges, 3,889 communities (Jul-24 regen ran community detection over 9,236 files / 16.7M words) |
 | Generated | 2026-07-24 (commit `ee85bbfb`) — previous regeneration: 2026-07-18 |
 - `references/vault-research-pipeline.md` — PDF reading (pymupdf on Python 3.14), research note template, evidence grading, linking pattern
@@ -24,7 +24,7 @@ Turn any folder of files into a navigable knowledge graph with community detecti
 - `references/obsidian-canvas-generation.md` — programmatic `.canvas` building, slug cover matching, case-insensitive genre classification
 - `references/mempalace-venv.md` — bare `mempalace` on PATH uses Python 3.14 and crashes on numpy ABI; use `cd E:/_Dev_Tools/mempalace && python -m mempalace …`
 | CLI binary | `C:/Users/shrey/AppData/Local/Programs/Python/Python314/Scripts/graphify` |
-| Source | `E:/_Dev_Tools/graphify/` |
+| Source | `/home/hermes/graphify/` |
 
 **Support scripts in this skill's `scripts/` directory** (keyed by the pitfall they fix):
 - `scripts/find-tag.py` — vault-wide tag search that distinguishes real tags from prose mentions
@@ -40,7 +40,7 @@ The vault at `E:/_Knowledge/ObsidianVault` has been indexed with graphify. The g
 - God nodes in GRAPH_REPORT.md identify central concepts
 
 **Key vault paths:**
-- Graph output: `E:/_Knowledge/ObsidianVault/graphify-out/graph.json` + `GRAPH_REPORT.md`
+- Graph output: `/vault/graphify-out/graph.json` + `GRAPH_REPORT.md`
 - Wiki notes: `E:/_Knowledge/ObsidianVault/wiki/`
 - Research: `E:/_Knowledge/ObsidianVault/Research/`
 - Daily logs: `E:/_Knowledge/ObsidianVault/04 - DAILY/`
@@ -151,7 +151,7 @@ Before answering architecture/codebase questions, read `graphify-out/GRAPH_REPOR
 
 `execute_code` is blocked for arbitrary Python scripts that write output files (canvas generation, data processing, etc.). When you need to run a multi-step Python script that produces a file:
 
-1. Write the script to `E:/_Dev_Tools/graphify/<descriptive-name>.py` using `write_file`
+1. Write the script to `/home/hermes/graphify/<descriptive-name>.py` using `write_file`
 2. Run it via `terminal`: `cd E:/_Dev_Tools/graphify && python <descriptive-name>.py`
 3. Verify output with targeted `terminal` commands, not execute_code
 
@@ -165,7 +165,7 @@ Graphify generates a "Community Hubs (Navigation)" section at the top of GRAPH_R
 
 **Symptoms:** Clicking any community link in Obsidian opens a blank/dead page. User will say "community links are empty," "many community links are empty please check and fix it," or paste an `obsidian://open?vault=...&file=graphify-out%2FGRAPH_REPORT` deep-link. The deep-link is a strong signal: the user is *already inside* the broken file, so the fix must touch GRAPH_REPORT.md directly, not the script that generated it.
 
-**One-page fix script** lives at `E:/_Dev_Tools/graphify/scripts/fix-community-links.py` and is idempotent. It:
+**One-page fix script** lives at `/home/hermes/graphify/scripts/fix-community-links.py` and is idempotent. It:
 1. Locates the `## Community Hubs (Navigation)` block.
 2. Collects every `[[_COMMUNITY_Community N|Community N]]` link number.
 3. Replaces them with internal anchor links `[Community N](#community-N-community-N)`.
@@ -173,22 +173,22 @@ Graphify generates a "Community Hubs (Navigation)" section at the top of GRAPH_R
 
 **Run pattern:**
 ```
-python E:/_Dev_Tools/graphify/scripts/fix-community-links.py \
-    --report E:/_Knowledge/ObsidianVault/graphify-out/GRAPH_REPORT.md
+python /home/hermes/graphify/scripts/fix-community-links.py \
+    --report /vault/graphify-out/GRAPH_REPORT.md
 ```
 
-**Permanent automation (added 2026-07-24):** the user's `vault-maintenance` cron (id `8c79d585c3b5`, daily 02:00 IST) now invokes `E:/_Dev_Tools/graphify/scripts/graphify-with-fix.py` after every graphify run, so dead community links **cannot reappear** without manual intervention. The wrapper chains:
+**Permanent automation (added 2026-07-24):** the user's `vault-maintenance` cron (id `8c79d585c3b5`, daily 02:00 IST) now invokes `/home/hermes/graphify/scripts/graphify-with-fix.py` after every graphify run, so dead community links **cannot reappear** without manual intervention. The wrapper chains:
 
-1. `E:/_Dev_Tools/graphify/scripts/fix-community-links.py` — idempotent post-processor (atomic write via `os.replace`, auto-backup at `<report>.pre-fix-<YYYYMMDDTHHMMSS>`). Run standalone with `--report <path>` or `--report-only` (skip graphify).
-2. `E:/_Dev_Tools/graphify/scripts/graphify-with-fix.py` — wrapper that runs graphify then the fixer. Continues to apply the fix even if graphify errors out.
+1. `/home/hermes/graphify/scripts/fix-community-links.py` — idempotent post-processor (atomic write via `os.replace`, auto-backup at `<report>.pre-fix-<YYYYMMDDTHHMMSS>`). Run standalone with `--report <path>` or `--report-only` (skip graphify).
+2. `/home/hermes/graphify/scripts/graphify-with-fix.py` — wrapper that runs graphify then the fixer. Continues to apply the fix even if graphify errors out.
 
 Standard invocation:
 ```bash
 "C:/Users/shrey/AppData/Local/Programs/Python/Python314/python.exe" \
-  E:/_Dev_Tools/graphify/scripts/graphify-with-fix.py --report-only
+  /home/hermes/graphify/scripts/graphify-with-fix.py --report-only
 # or full chain:
 "C:/Users/shrey/AppData/Local/Programs/Python/Python314/python.exe" \
-  E:/_Dev_Tools/graphify/scripts/graphify-with-fix.py cluster-only .
+  /home/hermes/graphify/scripts/graphify-with-fix.py cluster-only .
 ```
 
 If a user-visible complaint of "empty community links" comes in, the user is likely looking at a stale state mid-afternoon *before* the next cron run. Run `--report-only` immediately; the fix takes <1s.
@@ -250,7 +250,7 @@ Concrete past run (2026-07-20): vault had 8,403 .md files. `content-pipeline` ma
 
 Run pattern when triggered by user request like "check why my community links are broken":
 ```
-python E:/_Dev_Tools/graphify/scripts/scan-broken-links.py E:/_Knowledge/ObsidianVault
+python /home/hermes/graphify/scripts/scan-broken-links.py E:/_Knowledge/ObsidianVault
 ```
 
 Important: most "broken" targets in a typical vault are LLM-generated topic tags in `00_Index.md` / `00_Qwen_Index.md`-style auto-generated files. These look like missing notes but were never intended as real notes — they are categorization tags that don't have corresponding pages. Different from `_COMMUNITY_Community N.md` missing files (which is a graphify report-emission bug fixed by the Dead Community Links section above).
