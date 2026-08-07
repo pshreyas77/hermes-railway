@@ -12,12 +12,12 @@ when_to_load: always_available
 # Indian Philosophers & Batman — Video Playlist
 
 ## Files in vault
-- **HTML (interactive):** `E:/_Knowledge/ObsidianVault/03 - RESOURCES/Indian Philosophers — Video & Book Playlist.html`
-- **Markdown note:** `E:/_Knowledge/ObsidianVault/03 - RESOURCES/Indian Philosophers — Video & Book Playlist.md`
+- **HTML (interactive):** `/vault/03 - RESOURCES/Indian Philosophers — Video & Book Playlist.html`
+- **Markdown note:** `/vault/03 - RESOURCES/Indian Philosophers — Video & Book Playlist.md`
 
 ## Quick restore (rebuild from source canvases if HTML is lost)
-1. Read `E:/_Knowledge/ObsidianVault/03 - RESOURCES/Philosophy_Links_Tracker.canvas` → extract all `https://` URLs from text nodes (group by x-position: Osho<-500, JK-300, UGK<300, Nag<750, Char≥900)
-2. Read `E:/_Knowledge/ObsidianVault/03 - RESOURCES/Batman Philosophy Archive.canvas` → extract all `[YouTube](url)` links
+1. Read `/vault/03 - RESOURCES/Philosophy_Links_Tracker.canvas` → extract all `https://` URLs from text nodes (group by x-position: Osho<-500, JK-300, UGK<300, Nag<750, Char≥900)
+2. Read `/vault/03 - RESOURCES/Batman Philosophy Archive.canvas` → extract all `[YouTube](url)` links
 3. Inject into the HTML template (dark theme, Inter font, video-card + book-row layout)
 4. Copy to `/c/Users/shrey/AppData/Local/Temp/playlist.html` for browser viewing
 
