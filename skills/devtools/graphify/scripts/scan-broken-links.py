@@ -10,7 +10,7 @@ Walks an Obsidian vault, counts all wiki-links [[Target]] and reports:
 USAGE:
     python scan-broken-links.py [VAULT_PATH]
 
-If VAULT_PATH is omitted, defaults to E:/_Knowledge/ObsidianVault.
+If VAULT_PATH is omitted, defaults to /vault.
 
 Distinguishes REAL broken-link targets from auto-generated topic tags in LLM-
 generated index files (e.g. _Qwen_Index.md, 00_Index.md). The latter contain
@@ -37,7 +37,7 @@ Performance:
 import os, re, sys
 from pathlib import Path
 
-VAULT = Path(sys.argv[1] if len(sys.argv) > 1 else "E:/_Knowledge/ObsidianVault")
+VAULT = Path(sys.argv[1] if len(sys.argv) > 1 else "/vault")
 SKIP_DIRS = {".git", ".obsidian", ".trash", "graphify-out", "mempalace-out",
              ".claude", "node_modules", "__pycache__", ".hermes", "cache",
              "smart-connections", "smart-chat"}
