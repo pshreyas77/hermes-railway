@@ -9,11 +9,11 @@ don't get fooled by stray prose mentions:
 
 Usage (matches the execute_code workaround pattern in the graphify SKILL.md):
 
-    cd E:/_Dev_Tools/graphify && python find-tag.py <vault> <tag>
+    cd /home/hermes/graphify && python find-tag.py <vault> <tag>
 
 Example:
 
-    python find-tag.py E:/_Knowledge/ObsidianVault content-pipeline
+    python find-tag.py /vault content-pipeline
 
 Output:
     Section 1: file paths where the tag is real (frontmatter array OR inline #tag)
