@@ -113,7 +113,87 @@ RUN chmod +x /home/hermes/sync_vault.sh
 # 4. Clone vault (BLOCKING - must complete before gateway)
 # 5. Verify vault has files
 # 6. Launch gateway
-RUN printf '#!/bin/sh\necho "[start.sh] $(date) - HERMES BOT STARTING"\nset +e\nmkdir -p ~/.hermes\ncat > ~/.hermes/.env <<EOF2\nNVIDIA_API_KEY=${NVIDIA_API_KEY}\nTELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}\nTELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}\nTELEGRAM_ADMIN_CHAT_IDS=${TELEGRAM_ADMIN_CHAT_IDS}\nGATEWAY_ALLOW_ALL_USERS=${GATEWAY_ALLOW_ALL_USERS}\nOBSIDIAN_VAULT_PATH=/vault\nEOF2\necho "[start.sh] .env written"\n\n# Start health server in background\necho "[start.sh] Starting health server on port 8080..."\npython3 /home/hermes/health_server.py > /tmp/health.log 2>&1 &\nHEALTH_PID=$!\necho "[start.sh] Health server PID: $HEALTH_PID"\n\n# Start vault sync in background (runs every hour)\necho "[start.sh] Starting vault sync daemon..."\n/home/hermes/sync_vault.sh > /tmp/sync.log 2>&1 &\nSYNC_PID=$!\necho "[start.sh] Vault sync PID: $SYNC_PID"\n\n# Clone vault (BLOCKING - must complete before gateway)\necho "[start.sh] Cloning Obsidian vault..."\nVAULT_OK=0\nfor attempt in 1 2 3; do\n  echo "[start.sh] Attempt $attempt/3"\n  if [ -d /vault/.git ]; then\n    echo "[start.sh] Vault exists, pulling latest..."\n    timeout 60 git -C /vault pull --depth=1 --ff-only 2>&1 | tail -3\n  else\n    echo "[start.sh] Cloning vault from GitHub..."\n    timeout 180 git clone --depth=1 https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git /vault 2>&1 | tail -5\n  fi\n  \n  if [ -d /vault ]; then\n    VAULT_COUNT=$(find /vault -name "*.md" -type f 2>/dev/null | wc -l)\n    echo "[start.sh] Vault has $VAULT_COUNT markdown files"\n    if [ "$VAULT_COUNT" -gt 0 ]; then\n      VAULT_OK=1\n      echo "[start.sh] VAULT READY"\n      break\n    fi\n  fi\n  echo "[start.sh] Vault not ready, retrying..."\n  sleep 5\ndone\n\nif [ "$VAULT_OK" -eq 0 ]; then\n  echo "[start.sh] WARNING: Vault clone failed, but launching gateway anyway"\nfi\n\necho "[start.sh] Launching gateway on port 8000..."\nexec hermes gateway run --no-supervise\n' > /home/hermes/start.sh && chmod +x /home/hermes/start.sh
+RUN printf '#!/bin/sh
+echo "[start.sh] $(date) - HERMES BOT STARTING"
+set +e
+mkdir -p ~/.hermes
+cat > ~/.hermes/.env <<EOF2
+NVIDIA_API_KEY=${NVIDIA_API_KEY}
+TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+TELEGRAM_ADMIN_CHAT_IDS=${TELEGRAM_ADMIN_CHAT_IDS}
+GATEWAY_ALLOW_ALL_USERS=${GATEWAY_ALLOW_ALL_USERS}
+OBSIDIAN_VAULT_PATH=/vault
+EOF2
+echo "[start.sh] .env written"
+
+# Start health server in background
+echo "[start.sh] Starting health server on port 8080..."
+python3 /home/hermes/health_server.py > /tmp/health.log 2>&1 &
+HEALTH_PID=$!
+echo "[start.sh] Health server PID: $HEALTH_PID"
+
+# Start vault sync in background (runs every hour)
+echo "[start.sh] Starting vault sync daemon..."
+/home/hermes/sync_vault.sh > /tmp/sync.log 2>&1 &
+SYNC_PID=$!
+echo "[start.sh] Vault sync PID: $SYNC_PID"
+
+# Clone vault (BLOCKING - must complete before gateway)
+echo "[start.sh] Cloning Obsidian vault..."
+VAULT_OK=0
+for attempt in 1 2 3; do
+  echo "[start.sh] Attempt $attempt/3"
+  if [ -d /vault/.git ]; then
+    echo "[start.sh] Vault exists, pulling latest..."
+    timeout 60 git -C /vault pull --depth=1 --ff-only 2>&1 | tail -3
+  else
+    echo "[start.sh] Cloning vault from GitHub..."
+    timeout 180 git clone --depth=1 https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git /vault 2>&1 | tail -5
+  fi
+  
+  if [ -d /vault ]; then
+    VAULT_COUNT=$(find /vault -name "*.md" -type f 2>/dev/null | wc -l)
+    echo "[start.sh] Vault has $VAULT_COUNT markdown files"
+    if [ "$VAULT_COUNT" -gt 0 ]; then
+      VAULT_OK=1
+      echo "[start.sh] VAULT READY"
+      break
+    fi
+  fi
+  echo "[start.sh] Vault not ready, retrying..."
+  sleep 5
+done
+
+if [ "$VAULT_OK" -eq 0 ]; then
+  echo "[start.sh] WARNING: Vault clone failed, but launching gateway anyway"
+fi
+
+echo "[start.sh] Launching gateway on port 8000..."
+# Launch gateway in background so we can set webhook after it's ready
+hermes gateway run --no-supervise > /tmp/gateway.log 2>&1 &
+GATEWAY_PID=$!
+echo "[start.sh] Gateway PID: $GATEWAY_PID"
+
+# Wait for gateway to be ready (poll the local health endpoint)
+echo "[start.sh] Waiting for gateway to be ready..."
+for i in {1..30}; do
+  if curl -sf http://localhost:8000/health > /dev/null 2>&1; then
+    echo "[start.sh] Gateway is ready!"
+    break
+  fi
+  sleep 2
+done
+
+# Set webhook via Telegram API (using token from .env)
+echo "[start.sh] Setting webhook..."
+WEBHOOK_URL="https://hermes-bot.victoriousdesert-40e70367.koreacentral.azurecontainerapps.io/webhooks/telegram"
+curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook"   -d "url=${WEBHOOK_URL}"   -d "secret_token=hermes-webhook-secret-2026-08-06"   -d "drop_pending_updates=true"   -d "allowed_updates=["message","edited_message"]"   | tee /tmp/webhook_set.log
+echo "[start.sh] Webhook set result: $(cat /tmp/webhook_set.log)"
+
+# Wait for gateway (this keeps the container alive)
+wait $GATEWAY_PID
+' > /home/hermes/start.sh && chmod +x /home/hermes/start.sh && chmod +x /home/hermes/start.sh
 
 # Expose ports
 EXPOSE 8000
