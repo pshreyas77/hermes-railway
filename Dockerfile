@@ -57,7 +57,7 @@ RUN chmod +x /home/hermes/sync_vault.sh
 
 # Create startup script
 # Verify skills directory exists and list skills
-RUN ls -la /home/hermes/.hermes/skills/ && ls -la /home/hermes/.hermes/skills/second-brain/
+RUN ls -la /home/hermes/.hermes/skills/ && ls -la /home/hermes/.hermes/skills/second_brain/
 
 RUN cat > /home/hermes/start.sh << 'STARTEOF' 
 #!/bin/sh
