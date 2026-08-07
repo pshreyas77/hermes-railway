@@ -66,7 +66,7 @@ For vaults on external drives or where you prefer manual control, use the vault-
 ```bash
 #!/usr/bin/env bash
 # Run this AFTER Obsidian starts, or add to your Obsidian launch wrapper
-VAULT="E:/_Knowledge/ObsidianVault"
+VAULT="/vault"
 cp "$VAULT/.obsidian/graph.json.backup.permanent" "$VAULT/.obsidian/graph.json"
 echo "✅ Restored color groups from permanent backup"
 ```
@@ -74,8 +74,8 @@ echo "✅ Restored color groups from permanent backup"
 **Workflow**:
 1. After configuring `graph.json` with all color groups, create permanent backup:
    ```bash
-   cp "E:/_Knowledge/ObsidianVault/.obsidian/graph.json" \
-      "E:/_Knowledge/ObsidianVault/.obsidian/graph.json.backup.permanent"
+   cp "/vault/.obsidian/graph.json" \
+      "/vault/.obsidian/graph.json.backup.permanent"
    ```
 2. When Obsidian clears colors (on startup or graph open), run the restore script
 3. Open/refresh graph (`Ctrl+G` twice) — colors appear
@@ -123,7 +123,7 @@ The graph container gets a class like `.color-fill-r249-g115-b22` (one per color
 
 ### Real-World 23-Group Configuration (Verified Working)
 
-This exact configuration was applied to a 50k-node vault (E:/_Knowledge/ObsidianVault) on 2026-07-30:
+This exact configuration was applied to a 50k-node vault (/vault) on 2026-07-30:
 
 ```json
 "colorGroups": [
