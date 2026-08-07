@@ -13,6 +13,10 @@ RUN pip install --no-cache-dir "hermes-agent[messaging]"
 
 # Create non-root user with bash shell
 RUN useradd -m -u 1000 -s /bin/bash hermes
+
+# Create /vault directory and set ownership to hermes
+RUN mkdir -p /vault && chown hermes:hermes /vault
+
 USER hermes
 WORKDIR /home/hermes
 
@@ -33,11 +37,13 @@ while true; do
             echo "[sync] Pull failed, attempting fresh clone..."
             cd /
             rm -rf /vault
+            mkdir -p /vault && chown hermes:hermes /vault
             git clone --depth=1 https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git /vault 2>&1 | tail -2
         fi
     else
         echo "[sync] Cloning vault..."
         rm -rf /vault
+        mkdir -p /vault && chown hermes:hermes /vault
         git clone --depth=1 https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git /vault 2>&1 | tail -2
     fi
     if [ -d /vault ]; then
