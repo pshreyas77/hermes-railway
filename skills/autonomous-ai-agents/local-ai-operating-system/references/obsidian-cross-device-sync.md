@@ -25,7 +25,7 @@ Obsidian's official Sync costs $8/mo. This doc covers alternatives that are $0.
 
 2. **Push vault to GitHub** (if not already):
    ```bash
-   cd E:/_Knowledge/ObsidianVault
+   cd /vault
    git init
    git remote add origin https://github.com/YOUR_USERNAME/obsidian-vault.git
    git add .
@@ -101,7 +101,7 @@ If you ran Obsidian on a **Mac**, vault in iCloud = instant free sync to iOS.
 
 ### .gitignore (exclude sensitive/binary files)
 
-Create `E:/_Knowledge/ObsidianVault/.gitignore`:
+Create `/vault/.gitignore`:
 
 ```
 # Obsidian system files
@@ -149,7 +149,7 @@ Thumbs.db
 
 ## Vault Status (Shrey's Current Setup)
 
-- Vault: `E:/_Knowledge/ObsidianVault`
+- Vault: `/vault`
 - Already on GitHub: likely yes (based on existing git workflow)
 - iOS access: not yet configured
 - **Recommended next step:** Install Obsidian Git plugin in-app, push to GitHub, clone in GitJournal
