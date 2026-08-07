@@ -22,8 +22,8 @@ WORKDIR /home/hermes
 
 # Create .hermes directory and copy config
 RUN mkdir -p ~/.hermes
-COPY --chown=hermes:hermes config.yaml ~/.hermes/config.yaml
-COPY --chown=hermes:hermes skills ~/.hermes/skills
+COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
+COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
 
 # Create vault sync script
 RUN cat > /home/hermes/sync_vault.sh << 'SHEOF'
@@ -57,7 +57,7 @@ RUN chmod +x /home/hermes/sync_vault.sh
 
 # Create startup script
 # Verify skills directory exists and list skills
-RUN ls -la ~/.hermes/skills/ && ls -la ~/.hermes/skills/second-brain/
+RUN ls -la /home/hermes/.hermes/skills/ && ls -la /home/hermes/.hermes/skills/second-brain/
 
 RUN cat > /home/hermes/start.sh << 'STARTEOF' 
 #!/bin/sh
