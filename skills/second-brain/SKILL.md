@@ -1,18 +1,18 @@
 ---
-name: second-brain
-description: Search and query the user's Obsidian vault (second brain) at /vault via the /second-brain slash command.
+name: second_brain
+description: Search and query the user's Obsidian vault (second brain) at /vault via the /second_brain slash command.
 platforms: [linux, macos, windows]
 ---
 
-# Second Brain (/second-brain command)
+# Second Brain (/second_brain command)
 
 The user's Obsidian vault is ALWAYS available at `/vault` inside this container. It is cloned from GitHub on startup and kept in sync. You have FULL READ ACCESS to it.
 
 ## Recognising the command
 
-- `/second-brain <query>` — search the vault for `<query>`
-- `/second-brain` (no query) — list top-level folders
-- `/second-brain help` — show usage
+- `/second_brain <query>` — search the vault for `<query>`
+- `/second_brain` (no query) — list top-level folders
+- `/second_brain help` — show usage
 - User says "access my second brain", "search my vault", "find notes about X", etc. — treat as the same request
 
 ## Vault location
@@ -56,7 +56,7 @@ Keep responses under 1500 characters. Format:
 - 03 - RESOURCES
 - ...
 
-Send `/second-brain <topic>` to search.
+Send `/second_brain <topic>` to search.
 ```
 
 **When searching:**
@@ -66,7 +66,7 @@ Send `/second-brain <topic>` to search.
 • `02 - AREAS/Aerodynamics.md` — "The boundary layer is..."
 • `03 - RESOURCES/Books/Anderson.md` — "Chapter 3 covers..."
 
-Want more detail? Send `/second-brain <refined query>`.
+Want more detail? Send `/second_brain <refined query>`.
 ```
 
 ## Safety
@@ -78,4 +78,4 @@ Want more detail? Send `/second-brain <refined query>`.
 ## If vault is empty
 
 If `/vault` doesn't exist or has no .md files, tell the user:
-"The vault sync hasn't completed yet. It usually takes 1-2 minutes after the bot starts. Try again in a moment, or send `/second-brain` to check status."
+"The vault sync hasn't completed yet. It usually takes 1-2 minutes after the bot starts. Try again in a moment, or send `/second_brain` to check status."
