@@ -46,13 +46,13 @@ A complete, production-ready pattern for building a **local-first AI operating s
 | Layer | Technology | Purpose | Key Files |
 |-------|------------|---------|-----------|
 | **Brain** | Hermes Agent | LLM reasoning, tool use, session management | `~/.hermes/config.yaml` (profile: `jarvis`) |
-| **Verbatim Memory** | MemPalace (Docker) | Exact conversation storage, semantic search | `E:/_Dev_Tools/mempalace/docker-compose.yml` |
-| **Structured Memory** | Obsidian Vault | Notes, MOCs, daily logs, research | `E:/_Knowledge/ObsidianVault/` |
-| **Knowledge Graph** | graphify | 50k+ nodes, entity relationships, queries | `E:/_Knowledge/ObsidianVault/graphify-out/` |
-| **Hands (Tools)** | MCP Servers | Terminal, Obsidian, Graphify, Browser | `E:/_Dev_Tools/jarvis/mcp/` |
-| **Remote Control** | Telegram Bot | `/brief`, `/graph`, `/run`, `/status` | `E:/_Dev_Tools/jarvis/telegram/bot.py` |
+| **Verbatim Memory** | MemPalace (Docker) | Exact conversation storage, semantic search | `/home/hermes/mempalace/docker-compose.yml` |
+| **Structured Memory** | Obsidian Vault | Notes, MOCs, daily logs, research | `/vault/` |
+| **Knowledge Graph** | graphify | 50k+ nodes, entity relationships, queries | `/vault/graphify-out/` |
+| **Hands (Tools)** | MCP Servers | Terminal, Obsidian, Graphify, Browser | `/home/hermes/jarvis/mcp/` |
+| **Remote Control** | Telegram Bot | `/brief`, `/graph`, `/run`, `/status` | `/home/hermes/jarvis/telegram/bot.py` |
 | **Automation** | Hermes Cron | 6 scheduled jobs | `hermes cron list` |
-| **Dashboard** | FastAPI + WS | Web UI, WebSocket, real-time | `E:/_Dev_Tools/jarvis/dashboard/server.py` |
+| **Dashboard** | FastAPI + WS | Web UI, WebSocket, real-time | `/home/hermes/jarvis/dashboard/server.py` |
 
 ---
 
@@ -60,11 +60,11 @@ A complete, production-ready pattern for building a **local-first AI operating s
 
 ```bash
 # 1. Configure Telegram (one-time)
-cp E:/_Dev_Tools/jarvis/.env.template E:/_Dev_Tools/jarvis/.env
+cp /home/hermes/jarvis/.env.template /home/hermes/jarvis/.env
 # Edit .env with BOT_TOKEN and USER_ID from @BotFather / @userinfobot
 
 # 2. Start everything
-python E:/_Dev_Tools/jarvis/launch_complete.py
+python /home/hermes/jarvis/launch_complete.py
 ```
 
 **What starts:**
@@ -98,7 +98,7 @@ graphify query "What are the most important updates in my vault today?"
 ### 3. Vault Maintenance (Automated)
 ```bash
 # 2:00 AM daily
-graphify update E:/_Knowledge/ObsidianVault  # incremental, no API cost
+graphify update /vault  # incremental, no API cost
 mempalace mine                               # new conversations → entities
 ```
 
@@ -108,14 +108,14 @@ When the user asks to "wire X repo into my second brain" (or any variant — "mi
 
 ```bash
 # 1. Clone to E:
-cd E:/_Dev_Tools && git clone --depth=1 https://github.com/<owner>/<repo>.git
+cd /home/hermes && git clone --depth=1 https://github.com/<owner>/<repo>.git
 #    (or use the canonical cache: graphify clone <url> → ~/.graphify/repos/<owner>/<repo>/)
 
 # 2. Update entities.json (project + author)
-# E:/_Knowledge/ObsidianVault/entities.json — append to projects[], add author to people[]
+# /vault/entities.json — append to projects[], add author to people[]
 
 # 3. Mine into MemPalace
-cd E:/_Dev_Tools/mempalace && ./mp.sh mine "E:/_Dev_Tools/<repo>" --wing <short-name>
+cd /home/hermes/mempalace && ./mp.sh mine "/home/hermes/<repo>" --wing <short-name>
 #    CLI: positional dir + --wing NAME. --folder/--room do NOT exist.
 
 # 4. Graphify the repo itself
@@ -123,7 +123,7 @@ cd C:/Users/shrey/.graphify/repos/<owner>/<repo> && graphify update .
 #    Bare `graphify <path>` errors with "unknown command '<path>'". Always cd first.
 
 # 5. Write a wikilinked vault note
-# E:/_Knowledge/ObsidianVault/wiki/<short-name>.md — tag `second-brain-source`,
+# /vault/wiki/<short-name>.md — tag `second-brain-source`,
 #    link the palace wing + graphify-out path + repo URL
 ```
 
@@ -220,9 +220,9 @@ services:
 
 ### E: Drive Enforcement
 **Rule:** ALL installs, clones, builds, caches → `E:` drive. Never `C:`.
-- Vault: `E:/_Knowledge/ObsidianVault`
-- Dev tools: `E:/_Dev_Tools/` (graphify, mempalace, jarvis)
-- AI tools: `E:/_AI_Tools/`
+- Vault: `/vault`
+- Dev tools: `/home/hermes/` (graphify, mempalace, jarvis)
+- AI tools: `/home/hermes/_AI_Tools/`
 
 Enforced in `AGENTS.md` and `obsidian` skill vault-path section.
 
@@ -237,7 +237,7 @@ Enforced in `AGENTS.md` and `obsidian` skill vault-path section.
 ## File Structure Reference
 
 ```
-E:/_Dev_Tools/jarvis/
+/home/hermes/jarvis/
 ├── ARCHITECTURE.md              # Full system spec
 ├── launch_complete.py           # One-command startup
 ├── mcp_config.json              # MCP server registry
@@ -253,12 +253,12 @@ E:/_Dev_Tools/jarvis/
 ├── cron/jarvis_crons.md         # 6 cron definitions
 └── launch.py                    # Simple launcher
 
-E:/_Dev_Tools/mempalace/
+/home/hermes/mempalace/
 ├── docker-compose.yml           # ChromaDB + MemPalace
 ├── Dockerfile                   # Python 3.13, pinned deps
 └── pyproject.toml               # numpy==1.24.3, chromadb==0.4.22
 
-E:/_Knowledge/ObsidianVault/
+/vault/
 ├── AGENTS.md                    # Jarvis system prompt
 ├── wiki/entities/               # People, orgs
 ├── wiki/concepts/               # Concepts, movements
@@ -288,9 +288,9 @@ E:/_Knowledge/ObsidianVault/
 
 | Task | Frequency | Command |
 |------|-----------|---------|
-| Graph update | After major vault changes | `graphify update E:/_Knowledge/ObsidianVault` |
-| MemPalace mine | Daily (auto) | `cd E:/_Dev_Tools/mempalace && bash mp.sh mine --limit 50 E:/_Knowledge/ObsidianVault` (positional dir, not `--vault`; mp.sh enforces E:-only caches) |
-| Docker restart | After config changes | `cd E:/_Dev_Tools/mempalace && docker-compose up -d --build` |
+| Graph update | After major vault changes | `graphify update /vault` |
+| MemPalace mine | Daily (auto) | `cd /home/hermes/mempalace && bash mp.sh mine --limit 50 /vault` (positional dir, not `--vault`; mp.sh enforces E:-only caches) |
+| Docker restart | After config changes | `cd /home/hermes/mempalace && docker-compose up -d --build` |
 | Cron status | Weekly | `hermes cron list` |
 | Disk check | Monthly | `df -h E:` |
 
@@ -303,12 +303,12 @@ E:/_Knowledge/ObsidianVault/
 | `numpy._core._multiarray_umath` import error | ABI mismatch | Use Docker (pinned numpy 1.24.3) |
 | Graphify "not found" | Binary not on PATH | Use full path: `C:/Users/shrey/AppData/Local/Programs/Python/Python314/Scripts/graphify` |
 | Graphify `error: unknown command '<path>'` | Tried `graphify <path>` from a non-target dir | `cd` into the target dir first, then run `graphify update .`. For GitHub repos, use `graphify clone <url>` then `cd ~/.graphify/repos/<owner>/<repo>`. |
-| `graphify cluster-only` fails with `JSONDecodeError: Expecting ',' delimiter` at a high line number in `graph.json` | `graph.json` was truncated mid-write (killed process, disk full, etc.) — ends mid-node with no closing `]}` brackets | File is **physically corrupted**, not stale. `graphify update` cannot read it. **Fix:** delete or move `E:/_Knowledge/ObsidianVault/graphify-out/graph.json` aside, then run a full `/graphify /e/_Knowledge/ObsidianVault` regen (community-detection pass takes 30-90 min on the 50k-node vault). Until regen completes, the prior `GRAPH_REPORT.md` is still readable but no incremental updates can land. Verified Aug-4 2026 — Aug-1 graph.json ended at line 419742 mid-`aiAgents.ts` node. |
-| Cron wrapper fails with `ValueError: open: embedded null character in path` | Hermes lifecycle_guard trips on literal `C:/Users/shrey/...` paths when the shell normalizes them — known false-positive on this Windows host | Use **msys / Git-bash style paths** in cron commands: `cd /e/_Dev_Tools/graphify && python scripts/graphify-with-fix.py cluster-only /e/_Knowledge/ObsidianVault`. PowerShell / cmd invocations with literal `E:/_Dev_Tools/...` paths still work — only the bash wrapper is affected. Verified Aug-4 2026. |
+| `graphify cluster-only` fails with `JSONDecodeError: Expecting ',' delimiter` at a high line number in `graph.json` | `graph.json` was truncated mid-write (killed process, disk full, etc.) — ends mid-node with no closing `]}` brackets | File is **physically corrupted**, not stale. `graphify update` cannot read it. **Fix:** delete or move `/vault/graphify-out/graph.json` aside, then run a full `/graphify /e/_Knowledge/ObsidianVault` regen (community-detection pass takes 30-90 min on the 50k-node vault). Until regen completes, the prior `GRAPH_REPORT.md` is still readable but no incremental updates can land. Verified Aug-4 2026 — Aug-1 graph.json ended at line 419742 mid-`aiAgents.ts` node. |
+| Cron wrapper fails with `ValueError: open: embedded null character in path` | Hermes lifecycle_guard trips on literal `C:/Users/shrey/...` paths when the shell normalizes them — known false-positive on this Windows host | Use **msys / Git-bash style paths** in cron commands: `cd /e/_Dev_Tools/graphify && python scripts/graphify-with-fix.py cluster-only /e/_Knowledge/ObsidianVault`. PowerShell / cmd invocations with literal `/home/hermes/...` paths still work — only the bash wrapper is affected. Verified Aug-4 2026. |
 | `mempalace mine --vault X --incremental --limit 50` errors with `unrecognized arguments` | `mempalace mine` takes `dir` as **positional**, and decides new-vs-existing by file mtime itself — there is no `--vault` or `--incremental` flag | Correct invocation: `bash mp.sh mine --limit 50 /e/_Knowledge/ObsidianVault` (positional dir, mp.sh wrapper enforces E:-only caches). A run that reports `Files processed: 0 / Drawers filed: 0` is healthy steady-state, not an error — hallway/entity-tunnel counts are still refreshed. |
 | Telegram bot silent | Token/user ID wrong | Check `.env`, verify with `@userinfobot` |
 | Cron not firing | Hermes not running | `hermes cron status`, ensure gateway/CLI running |
-| Dashboard 404 | Server not started | `python E:/_Dev_Tools/jarvis/dashboard/server.py` |
+| Dashboard 404 | Server not started | `python /home/hermes/jarvis/dashboard/server.py` |
 
 ---
 
@@ -316,7 +316,7 @@ E:/_Knowledge/ObsidianVault/
 
 | Need | Add |
 |------|-----|
-| New data source | MCP server in `E:/_Dev_Tools/jarvis/mcp/<name>/server.py` |
+| New data source | MCP server in `/home/hermes/jarvis/mcp/<name>/server.py` |
 | New Telegram command | Handler in `telegram/bot.py` + register in `main()` |
 | New dashboard widget | API route in `dashboard/server.py` + HTML in `templates/dashboard.html` |
 | New cron job | `hermes cron create "SCHEDULE" --prompt "..." --skills "..." --name "name" --deliver "telegram"` |
