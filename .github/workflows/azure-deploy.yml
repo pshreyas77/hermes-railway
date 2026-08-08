@@ -107,7 +107,7 @@ jobs:
             
             echo "=== Container App created ==="
 
-      - name: Configure health probes
+      - name: Configure health probes via REST API
         uses: azure/CLI@v2
         with:
           inlineScript: |
@@ -115,27 +115,19 @@ jobs:
             APP_NAME="${{ env.CONTAINER_APP_NAME }}"
             RG="${{ env.RESOURCE_GROUP }}"
             
-            echo "Adding liveness and readiness probes..."
-            az containerapp update \
-              --name "$APP_NAME" \
-              --resource-group "$RG" \
-              --liveness-probe \
-                --path /health \
-                --port 8000 \
-                --initial-delay 30 \
-                --period 10 \
-                --timeout 5 \
-                --failure-threshold 3 \
-              --readiness-probe \
-                --path /health \
-                --port 8000 \
-                --initial-delay 10 \
-                --period 10 \
-                --timeout 5 \
-                --failure-threshold 3
+            echo "Adding liveness and readiness probes via REST API..."
+            
+            # Get the resource ID
+            RESOURCE_ID=$(az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "id" -o tsv)
+            echo "Resource ID: $RESOURCE_ID"
+            
+            # Use az rest to patch the container app with probes
+            az rest --method PATCH \
+              --uri "${RESOURCE_ID}?api-version=2024-03-01" \
+              --headers "Content-Type=application/merge-patch+json" \
+              --body '{"properties":{"template":{"containers":[{"name":"hermes-bot","probes":[{"name":"liveness","type":"HTTP","httpGet":{"path":"/health","port":8000},"initialDelaySeconds":30,"periodSeconds":10,"timeoutSeconds":5,"failureThreshold":3},{"name":"readiness","type":"HTTP","httpGet":{"path":"/health","port":8000},"initialDelaySeconds":10,"periodSeconds":10,"timeoutSeconds":5,"failureThreshold":3}]}}}}'
             
             echo "=== Health probes configured ==="
-            az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "{name:name, fqdn:properties.configuration.ingress.fqdn, state:properties.runningStatus, liveness:properties.template.containers[0].probes[?name=='liveness'], readiness:properties.template.containers[0].probes[?name=='readiness']}" -o json
 
       - name: Wait for container to be ready
         uses: azure/CLI@v2
