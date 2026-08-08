@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Install system dependencies
+# Install system dependencies (git is already there; we add ca-certificates for HTTPS, procps for process management)
 RUN apt-get update && apt-get install -y \
     curl \
     git \
@@ -25,41 +25,11 @@ RUN mkdir -p ~/.hermes
 COPY --chown=hermes:hermes config.yaml /home/hermes/.hermes/config.yaml
 COPY --chown=hermes:hermes skills /home/hermes/.hermes/skills
 
-# Create vault sync script
-RUN cat > /home/hermes/sync_vault.sh << 'SHEOF'
-#!/bin/sh
-# Sync vault from GitHub - runs every hour in background
-while true; do
-    if [ -d /vault/.git ]; then
-        cd /vault
-        git pull --depth=1 --ff-only 2>&1 | tail -2
-        if [ $? -ne 0 ]; then
-            echo "[sync] Pull failed, attempting fresh clone..."
-            cd /
-            rm -rf /vault
-            mkdir -p /vault && chown hermes:hermes /vault
-            git clone --depth=1 https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git /vault 2>&1 | tail -2
-        fi
-    else
-        echo "[sync] Cloning vault..."
-        rm -rf /vault
-        mkdir -p /vault && chown hermes:hermes /vault
-        git clone --depth=1 https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git /vault 2>&1 | tail -2
-    fi
-    if [ -d /vault ]; then
-        VAULT_COUNT=$(find /vault -name "*.md" -type f 2>/dev/null | wc -l)
-        echo "[sync] $(date) - Vault: $VAULT_COUNT markdown files"
-    fi
-    sleep 3600  # Wait 1 hour
-done
-SHEOF
-RUN chmod +x /home/hermes/sync_vault.sh
-
-# Create startup script
 # Verify skills directory exists and list skills
 RUN ls -la /home/hermes/.hermes/skills/ && ls -la /home/hermes/.hermes/skills/second_brain/
 
-RUN cat > /home/hermes/start.sh << 'STARTEOF' 
+# Create startup script with robust gateway readiness check
+RUN cat > /home/hermes/start.sh << 'STARTEOF'
 #!/bin/sh
 echo "[start.sh] $(date) - HERMES BOT STARTING"
 set +e
@@ -92,10 +62,10 @@ for attempt in 1 2 3; do
   echo "[start.sh] Attempt $attempt/3"
   if [ -d /vault/.git ]; then
     echo "[start.sh] Vault exists, pulling latest..."
-    timeout 60 git -C /vault pull --depth=1 --ff-only 2>&1 | tail -3
+    timeout 60 git -C /vault pull --depth=1 --ff-only 2>&1 | tail-3
   else
     echo "[start.sh] Cloning vault from GitHub..."
-    timeout 180 git clone --depth=1 https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git /vault 2>&1 | tail -5
+    timeout 180 git clone --depth=1 https://github.com/pshreyas77/MYOBSIDIAN-VAULT.git /vault 2>&1 | tail-5
   fi
   
   if [ -d /vault ]; then
@@ -139,7 +109,7 @@ curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook" \
   -d "url=${WEBHOOK_URL}" \
   -d "secret_token=hermes-webhook-secret-2026-08-06" \
   -d "drop_pending_updates=true" \
-  -d "allowed_updates=["message","edited_message"]" \
+  -d "allowed_updates=[\"message\",\"edited_message\"]" \
   | tee /tmp/webhook_set.log
 echo "[start.sh] Webhook set result: $(cat /tmp/webhook_set.log)"
 

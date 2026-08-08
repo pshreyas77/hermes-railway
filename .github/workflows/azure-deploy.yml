@@ -101,6 +101,22 @@ jobs:
                 TELEGRAM_ADMIN_CHAT_IDS="${{ secrets.TELEGRAM_ADMIN_CHAT_IDS }}" \
                 NVIDIA_API_KEY="${{ secrets.NVIDIA_API_KEY }}" \
                 GATEWAY_ALLOW_ALL_USERS=true \
+              --cpu 2.0 \
+              --memory 4Gi \
+              --liveness-probe \
+                --path /health \
+                --port 8000 \
+                --initial-delay 30 \
+                --period 10 \
+                --timeout 5 \
+                --failure-threshold 3 \
+              --readiness-probe \
+                --path /health \
+                --port 8000 \
+                --initial-delay 10 \
+                --period 10 \
+                --timeout 5 \
+                --failure-threshold 3 \
               --output none
             
             # Only port 8000 needed - gateway handles webhook on same port
