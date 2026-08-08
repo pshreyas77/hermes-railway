@@ -103,6 +103,22 @@ jobs:
                 GATEWAY_ALLOW_ALL_USERS=true \
               --cpu 2.0 \
               --memory 4Gi \
+              --output none
+            
+            echo "=== Container App created ==="
+
+      - name: Configure health probes
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            set -e
+            APP_NAME="${{ env.CONTAINER_APP_NAME }}"
+            RG="${{ env.RESOURCE_GROUP }}"
+            
+            echo "Adding liveness and readiness probes..."
+            az containerapp update \
+              --name "$APP_NAME" \
+              --resource-group "$RG" \
               --liveness-probe \
                 --path /health \
                 --port 8000 \
@@ -116,17 +132,12 @@ jobs:
                 --initial-delay 10 \
                 --period 10 \
                 --timeout 5 \
-                --failure-threshold 3 \
-              --output none
+                --failure-threshold 3
             
-            # Only port 8000 needed - gateway handles webhook on same port
-            echo "Using single port 8000 for gateway + webhook" 
-            
-            echo "=== Deployment complete ==="
-            az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "{name:name, fqdn:properties.configuration.ingress.fqdn, state:properties.runningStatus}" -o json
+            echo "=== Health probes configured ==="
+            az containerapp show --name "$APP_NAME" --resource-group "$RG" --query "{name:name, fqdn:properties.configuration.ingress.fqdn, state:properties.runningStatus, liveness:properties.template.containers[0].probes[?name=='liveness'], readiness:properties.template.containers[0].probes[?name=='readiness']}" -o json
 
       - name: Wait for container to be ready
-        id: wait
         uses: azure/CLI@v2
         with:
           inlineScript: |
@@ -134,43 +145,34 @@ jobs:
             APP_NAME="${{ env.CONTAINER_APP_NAME }}"
             RG="${{ env.RESOURCE_GROUP }}"
             
-            # Wait for container to be ready
+            # Get the FQDN
+            FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
+            echo "FQDN: $FQDN"
+            
+            # Wait for container to be ready (just check if app is running)
             for i in {1..60}; do
               echo "Checking container status... ($i/60)"
               STATUS=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.runningStatus" -o tsv 2>/dev/null || echo "Unknown")
               echo "Status: $STATUS"
               if [ "$STATUS" = "Running" ]; then
-                echo "Container is running! Waiting for gateway health..."
-                # Wait for gateway to be ready (poll webhook endpoint on 8000)
-                for j in {1..30}; do
-                  if curl -sf "https://${{ env.CONTAINER_APP_NAME }}.koreacentral.azurecontainerapps.io/webhooks/telegram" > /dev/null 2>&1; then
-                    echo "Gateway webhook endpoint responding!"
-                    break
-                  fi
-                  echo "Waiting for gateway... ($j/30)"
-                  sleep 3
-                done
+                echo "Container is running!"
                 break
               fi
               echo "Waiting... ($i/60)"
               sleep 10
             done
             
-            # Get final FQDN and export it
+            # Get final FQDN
             FQDN=$(az containerapp show --name "${{ env.CONTAINER_APP_NAME }}" --resource-group "${{ env.RESOURCE_GROUP }}" --query "properties.configuration.ingress.fqdn" -o tsv)
             echo "FQDN: $FQDN"
-            echo "fqdn=$FQDN" >> "$GITHUB_OUTPUT"
+            echo "FQDN=$FQDN" >> $GITHUB_OUTPUT
 
       - name: Set webhook
         uses: azure/CLI@v2
         with:
           inlineScript: |
             set -e
-            FQDN="${{ steps.wait.outputs.fqdn }}"
-            if [ -z "$FQDN" ]; then
-              echo "ERROR: FQDN is empty - cannot set webhook"
-              exit 1
-            fi
+            FQDN="${{ steps.wait.outputs.FQDN }}"
             WEBHOOK_URL="https://$FQDN/webhooks/telegram"
             echo "Setting webhook to: $WEBHOOK_URL"
             curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/setWebhook" \
